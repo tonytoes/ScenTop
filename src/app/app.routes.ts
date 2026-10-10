@@ -3,7 +3,7 @@ import { authGuard, guestGuard } from './core/auth.guard';
 
 // Every page is loaded the first time it is opened (loadComponent), which keeps the first download small.
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', title: 'ScenTop', loadComponent: () => import('./pages/splash/splash.page').then((m) => m.SplashPage) },
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
   { path: 'home', title: 'ScenTop | Find your signature scent', loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePage) },
 
   // Shopping

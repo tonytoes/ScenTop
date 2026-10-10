@@ -22,11 +22,14 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
 
   return next(request).pipe(
     catchError((response: HttpErrorResponse) => {
-      if (response.status === 0) {
+      const body = response.error?.error;
+
+      // No answer at all (0), or an error page that did not come from our API (e.g. the dev proxy when the API is not running)
+      if (response.status === 0 || (response.status >= 500 && typeof body?.message !== 'string')) {
+        console.error(`[ScenTop] The API did not answer ${request.method} ${request.url} (status ${response.status}). Running locally? Make sure "npm start" is running and check its terminal for [api] errors.`);
         return throwError(() => new ApiError('We could not reach the server. Check your connection and try again.', 0));
       }
 
-      const body = response.error?.error;
       const message = typeof body?.message === 'string' ? body.message : 'Something went wrong. Please try again.';
 
       // A 401 on a call that carried a token means the login expired (wrong passwords at the login form have no token)

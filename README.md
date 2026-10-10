@@ -18,7 +18,7 @@ npm start
 
 Then open **http://localhost:4200**. That's it: `npm start` runs the website (port 4200) and the API (port 3000) together.
 
-With no setup, the API uses a small database stored in `.data/` on your computer and fills it with the 18 perfumes on first start. Delete the `.data` folder to reset it. Make sure nothing else is using ports 3000 and 4200.
+With no setup, the API uses a small database stored in `~/.scentop/dev-db` (your user folder) and fills it with the 18 perfumes on first start. Delete that folder to reset it. **Keep the project outside OneDrive/Dropbox folders** (e.g. `C:\dev\ScenTop`): they lock files and make `npm install` slow. Make sure nothing else is using ports 3000 and 4200.
 
 | Command | What it does |
 | --- | --- |

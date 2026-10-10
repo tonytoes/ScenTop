@@ -28,7 +28,8 @@
     "lint:server": "eslint server",
     "lint:all": "ng lint && eslint server",
     "api": "tsx watch server/index.ts",
-    "web": "ng serve"
+    "web": "ng serve",
+    "prestart": "node scripts/check-env.mjs"
   },
   "private": true,
   "dependencies": {

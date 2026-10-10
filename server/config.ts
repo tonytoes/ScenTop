@@ -1,3 +1,4 @@
+import os from 'node:os';
 import path from 'node:path';
 
 export interface Config {
@@ -49,6 +50,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     autoMigrate: env.AUTO_MIGRATE !== 'false',
     dbPoolMax: Number(env.DB_POOL_MAX) || 10,
     bcryptRounds: mode === 'test' ? 4 : 10,
-    devDataDir: path.resolve(env.DEV_DATA_DIR || '.data/pglite'),
+    // Kept in the user's home folder, not the project: folders synced by OneDrive/Dropbox lock database files
+    devDataDir: path.resolve(env.DEV_DATA_DIR || path.join(os.homedir(), '.scentop', 'dev-db')),
   };
 }

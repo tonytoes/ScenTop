@@ -98,5 +98,9 @@ export async function createDb(config: Config): Promise<Db> {
 
   if (config.env === 'production') throw new Error('DATABASE_URL is required in production.');
   console.log(`[db] No DATABASE_URL set - using the embedded dev database in ${config.devDataDir}`);
-  return createPgliteDb(config.devDataDir);
+  try {
+    return await createPgliteDb(config.devDataDir);
+  } catch (error) {
+    throw new Error(`Could not open the built-in dev database in ${config.devDataDir}. Delete that folder and try again. (${error instanceof Error ? error.message : error})`);
+  }
 }
