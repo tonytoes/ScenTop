@@ -68,3 +68,10 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# ScenTop
+/dist-server
+/.data
+.env
+.env.*
+!.env.example

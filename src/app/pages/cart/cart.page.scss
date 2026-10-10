@@ -1,0 +1,36 @@
+.layout { display: grid; gap: 24px; align-items: start; }
+.items { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; }
+
+.item { display: flex; gap: 14px; padding: 12px; transition: opacity 0.2s ease; }
+.item.is-busy { opacity: 0.55; pointer-events: none; }
+.item__img { flex: none; width: 96px; height: 96px; overflow: hidden; border-radius: 16px; background: #fff; }
+.item__img img { width: 100%; height: 100%; object-fit: cover; }
+.item__main { display: flex; flex: 1; flex-direction: column; justify-content: space-between; gap: 10px; min-width: 0; }
+.item__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.item__name { font-size: 1.35rem; line-height: 1.15; }
+.item__name a { color: var(--st-ink); text-decoration: none; }
+.item__name a:hover { color: var(--st-rose-dark); }
+.item__top .muted { margin-top: 2px; font-size: 13px; }
+.remove { flex: none; width: 40px; height: 40px; margin: -6px -6px 0 0; color: var(--st-muted); font-size: 20px; }
+.remove:hover { color: var(--st-danger); background: var(--st-danger-bg); }
+.item__bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.item__total { font-size: 16px; }
+
+.summary { display: flex; flex-direction: column; gap: 14px; }
+.summary h2 { font-size: 1.7rem; }
+.summary dl { display: grid; gap: 10px; margin: 0; }
+.summary dl > div { display: flex; justify-content: space-between; gap: 12px; color: var(--st-muted); }
+.summary dd { margin: 0; color: var(--st-ink); font-weight: 500; }
+.summary .total { margin-top: 4px; padding-top: 14px; border-top: 1px dashed var(--st-line); color: var(--st-ink); font-size: 17px; font-weight: 600; }
+.summary .total dd { color: var(--st-rose-dark); font-size: 20px; font-weight: 600; }
+.note { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.note ion-icon { flex: none; color: var(--st-rose); font-size: 18px; }
+
+@media (min-width: 640px) {
+  .item { padding: 16px; gap: 20px; }
+  .item__img { width: 128px; height: 128px; }
+}
+@media (min-width: 960px) {
+  .layout { grid-template-columns: minmax(0, 1fr) 380px; gap: 32px; }
+  .summary { position: sticky; top: 96px; }
+}

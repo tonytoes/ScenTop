@@ -1,0 +1,38 @@
+.layout { display: grid; gap: 24px; align-items: start; }
+.block-title { display: flex; align-items: center; gap: 10px; font-size: 1.6rem; }
+.num { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--st-ink); color: #fff; font: 600 14px var(--st-font-body); }
+
+.pay {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1.5px solid var(--st-rose);
+  border-radius: 16px;
+  background: var(--st-blush);
+  cursor: default;
+}
+.pay input { position: absolute; opacity: 0; pointer-events: none; }
+.pay > ion-icon:first-of-type { font-size: 28px; color: var(--st-rose-dark); }
+.pay span { display: flex; flex: 1; flex-direction: column; }
+.pay small { color: var(--st-muted); font-size: 13px; }
+.pay__check { color: var(--st-rose); font-size: 24px; }
+
+.summary { display: flex; flex-direction: column; gap: 14px; }
+.summary h2 { font-size: 1.7rem; }
+.lines { display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0 0 14px; border-bottom: 1px solid var(--st-line); list-style: none; }
+.lines li { display: flex; align-items: center; gap: 12px; }
+.lines img { flex: none; width: 56px; height: 56px; object-fit: cover; border-radius: 12px; background: #fff; }
+.lines__name { display: flex; flex: 1; flex-direction: column; min-width: 0; font-weight: 500; }
+.lines__name small { color: var(--st-muted); font-weight: 400; }
+dl { display: grid; gap: 10px; margin: 0; }
+dl > div { display: flex; justify-content: space-between; gap: 12px; color: var(--st-muted); }
+dd { margin: 0; color: var(--st-ink); font-weight: 500; }
+.total { margin-top: 4px; padding-top: 14px; border-top: 1px dashed var(--st-line); color: var(--st-ink); font-size: 17px; font-weight: 600; }
+.total dd { color: var(--st-rose-dark); font-size: 20px; font-weight: 600; }
+.fine { color: var(--st-muted); font-size: 12.5px; text-align: center; }
+
+@media (min-width: 960px) {
+  .layout { grid-template-columns: minmax(0, 1fr) 400px; gap: 32px; }
+  .summary { position: sticky; top: 96px; }
+}

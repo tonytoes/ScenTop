@@ -1,0 +1,37 @@
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <div class="logo">
+        <img src="assets/images/logo-hat.png" alt="" width="44" height="38" />
+        <span>ScenTop</span>
+      </div>
+      <p>{{ company.tagline }}. Perfumes for every mood, delivered to your door.</p>
+      <ul class="contact">
+        <li><ion-icon name="mail-outline" /><a [href]="'mailto:' + company.email">{{ company.email }}</a></li>
+        <li><ion-icon name="call-outline" /><a [href]="'tel:' + company.phoneLink">{{ company.phone }}</a></li>
+        <li><ion-icon name="location-outline" /><span>{{ company.address }}</span></li>
+      </ul>
+      <div class="social">
+        <a [href]="company.social.facebook" target="_blank" rel="noopener" aria-label="ScenTop on Facebook"><ion-icon name="logo-facebook" /></a>
+        <a [href]="company.social.instagram" target="_blank" rel="noopener" aria-label="ScenTop on Instagram"><ion-icon name="logo-instagram" /></a>
+        <a [href]="company.social.twitter" target="_blank" rel="noopener" aria-label="ScenTop on X"><ion-icon name="logo-twitter" /></a>
+      </div>
+    </div>
+
+    @for (column of columns; track column.title) {
+      <nav class="footer__col" [attr.aria-label]="column.title">
+        <h4>{{ column.title }}</h4>
+        <ul>
+          @for (link of column.links; track link.label) {
+            <li><a [routerLink]="link.url" [queryParams]="link.query">{{ link.label }}</a></li>
+          }
+        </ul>
+      </nav>
+    }
+  </div>
+
+  <div class="container footer__legal">
+    <span>&copy; {{ year }} ScenTop. All rights reserved.</span>
+    <span>Pay with cash on delivery</span>
+  </div>
+</footer>

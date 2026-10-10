@@ -1,0 +1,78 @@
+<ion-menu contentId="main-content" menuId="main-menu" type="overlay" [disabled]="disabled()">
+  <ion-content>
+    <div class="menu">
+      <ion-menu-toggle autoHide="false">
+        <a class="profile" [routerLink]="auth.isLoggedIn() ? '/profile' : '/login'" routerDirection="forward">
+          <span class="avatar">
+            @if (auth.user()?.photoUrl; as photo) {
+              <img [src]="photo" alt="Your profile picture" />
+            } @else if (auth.isLoggedIn()) {
+              {{ initials() }}
+            } @else {
+              <ion-icon name="person-outline" />
+            }
+          </span>
+          <span class="profile__text">
+            <strong>{{ auth.isLoggedIn() ? auth.displayName() : 'Welcome, guest' }}</strong>
+            <small>{{ auth.user()?.phone || (auth.isLoggedIn() ? 'Add your phone number' : 'Log in to your account') }}</small>
+          </span>
+          <ion-icon name="chevron-forward-outline" class="profile__chevron" />
+        </a>
+      </ion-menu-toggle>
+
+      <nav aria-label="Shop">
+        <p class="group">Shop online</p>
+        @for (link of visible(shopLinks); track link.url) {
+          <ion-menu-toggle autoHide="false">
+            <a class="item" [routerLink]="link.url" routerDirection="root" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">
+              <span class="item__icon"><ion-icon [name]="link.icon" /></span>
+              <span class="item__text">
+                <strong>{{ link.label }}</strong>
+                <small>{{ link.hint }}</small>
+              </span>
+              @if (link.badge?.(); as count) {
+                <span class="item__badge">{{ count }}</span>
+              }
+            </a>
+          </ion-menu-toggle>
+        }
+      </nav>
+
+      <nav aria-label="About ScenTop">
+        <p class="group">About ScenTop</p>
+        @for (link of aboutLinks; track link.url) {
+          <ion-menu-toggle autoHide="false">
+            <a class="item" [routerLink]="link.url" routerDirection="root" routerLinkActive="is-active">
+              <span class="item__icon"><ion-icon [name]="link.icon" /></span>
+              <span class="item__text">
+                <strong>{{ link.label }}</strong>
+                <small>{{ link.hint }}</small>
+              </span>
+            </a>
+          </ion-menu-toggle>
+        }
+      </nav>
+
+      <div class="menu__foot">
+        <ion-menu-toggle autoHide="false">
+          <a class="item" routerLink="/settings" routerDirection="forward">
+            <span class="item__icon"><ion-icon name="settings-outline" /></span>
+            <span class="item__text"><strong>Settings</strong><small>Profile, FAQs and policies</small></span>
+          </a>
+        </ion-menu-toggle>
+
+        <ion-menu-toggle autoHide="false">
+          @if (auth.isLoggedIn()) {
+            <button type="button" class="btn btn--soft btn--block" (click)="logout()">
+              <ion-icon name="log-out-outline" /> Log out
+            </button>
+          } @else {
+            <a class="btn btn--primary btn--block" routerLink="/login" routerDirection="forward">
+              <ion-icon name="log-in-outline" /> Log in or sign up
+            </a>
+          }
+        </ion-menu-toggle>
+      </div>
+    </div>
+  </ion-content>
+</ion-menu>

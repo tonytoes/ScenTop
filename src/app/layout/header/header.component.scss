@@ -1,0 +1,96 @@
+ion-header {
+  background: rgba(255, 250, 241, 0.86);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--st-line);
+}
+ion-toolbar {
+  --background: transparent;
+  --border-width: 0;
+  --min-height: 64px;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: min(1200px, 100% - 16px);
+  min-height: 64px;
+  margin-inline: auto;
+}
+.bar__left { display: flex; align-items: center; justify-self: start; }
+.bar__right { display: flex; align-items: center; justify-self: end; gap: 2px; }
+
+ion-menu-button, ion-back-button {
+  --color: var(--st-ink);
+  --padding-start: 10px;
+  --padding-end: 10px;
+  font-size: 24px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--st-ink);
+  font: 700 26px/1 var(--st-font-display);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.brand:hover { text-decoration: none; }
+.brand img { height: 34px; width: auto; }
+
+.links { display: none; }
+
+.count {
+  position: absolute;
+  top: 3px;
+  right: 1px;
+  min-width: 19px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: var(--st-rose);
+  color: #fff;
+  font: 600 11px/1.5 var(--st-font-body);
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--st-cream);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 6px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--st-blush-deep);
+  color: var(--st-rose-dark);
+  font: 600 16px var(--st-font-display);
+  text-decoration: none;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.btn { margin-left: 8px; }
+
+/* Hidden on phones: the side menu already has these */
+.desktop-only { display: none; }
+
+@media (min-width: 1000px) {
+  .bar { grid-template-columns: auto auto 1fr auto; gap: 20px; width: min(1200px, 100% - 48px); }
+  .links { display: flex; justify-content: center; gap: 6px; }
+  .links a {
+    padding: 8px 16px;
+    border-radius: 999px;
+    color: var(--st-ink);
+    font-size: 14.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+  .links a:hover { background: var(--st-blush); }
+  .links a.is-active { background: var(--st-blush-deep); color: var(--st-rose-dark); }
+  .desktop-only { display: inline-flex; }
+  .avatar.desktop-only { display: grid; }
+}

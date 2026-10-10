@@ -1,0 +1,39 @@
+<div class="field" [class.has-error]="error()">
+  <label [for]="id">{{ label() }}</label>
+
+  <div class="control">
+    @if (rows() > 0) {
+      <textarea
+        [id]="id"
+        [formControl]="control()"
+        [rows]="rows()"
+        [attr.maxlength]="maxlength()"
+        [attr.autocomplete]="autocomplete()"
+        [placeholder]="placeholder()"
+        [attr.aria-invalid]="error() ? 'true' : null"
+        [attr.aria-describedby]="id + '-note'"
+      ></textarea>
+    } @else {
+      <input
+        [id]="id"
+        [type]="inputType()"
+        [formControl]="control()"
+        [attr.maxlength]="maxlength()"
+        [attr.autocomplete]="autocomplete()"
+        [placeholder]="placeholder()"
+        [attr.aria-invalid]="error() ? 'true' : null"
+        [attr.aria-describedby]="id + '-note'"
+      />
+    }
+
+    @if (isPassword()) {
+      <button type="button" class="toggle" (click)="showPassword.set(!showPassword())" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+        <ion-icon [name]="showPassword() ? 'eye-off-outline' : 'eye-outline'" />
+      </button>
+    }
+  </div>
+
+  <p class="note" [id]="id + '-note'" [class.note--error]="error()" [attr.role]="error() ? 'alert' : null">
+    {{ error() || hint() }}
+  </p>
+</div>

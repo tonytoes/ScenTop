@@ -1,0 +1,62 @@
+<app-page [refresh]="reload">
+  <header class="page-head">
+    <div class="container">
+      <span class="eyebrow">Almost yours</span>
+      <h1>Your cart</h1>
+    </div>
+  </header>
+
+  <section class="container section">
+    @if (cartService.loading() && cartService.cart().items.length === 0) {
+      <div class="skeleton" style="height: 140px; margin-bottom: 12px"></div>
+      <div class="skeleton" style="height: 140px"></div>
+    } @else if (cartService.cart().items.length === 0) {
+      <app-empty-state icon="cart-outline" heading="Your cart is empty" text="Add a perfume you love and it will show up here.">
+        <a class="btn btn--primary" routerLink="/shop">Start shopping</a>
+        <a class="btn btn--ghost" routerLink="/wishlist">View wishlist</a>
+      </app-empty-state>
+    } @else {
+      @let cart = cartService.cart();
+      <div class="layout">
+        <ul class="items">
+          @for (item of cart.items; track item.variantId) {
+            <li class="item card" [class.is-busy]="busyId() === item.variantId">
+              <a class="item__img" [routerLink]="['/product', item.slug]">
+                <img [src]="item.imageUrl" [alt]="item.name" width="120" height="120" loading="lazy" />
+              </a>
+              <div class="item__main">
+                <div class="item__top">
+                  <div>
+                    <h2 class="item__name"><a [routerLink]="['/product', item.slug]">{{ item.name }}</a></h2>
+                    <p class="muted">{{ item.sizeMl }} ml &middot; {{ item.unitPriceCents | peso }} each</p>
+                  </div>
+                  <button type="button" class="icon-btn remove" [attr.aria-label]="'Remove ' + item.name" (click)="remove(item)">
+                    <ion-icon name="trash-outline" />
+                  </button>
+                </div>
+                <div class="item__bottom">
+                  <app-quantity-stepper [value]="item.quantity" (valueChange)="setQuantity(item, $event)" small />
+                  <strong class="item__total">{{ item.lineTotalCents | peso }}</strong>
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+
+        <aside class="summary card card--pad" aria-label="Order summary">
+          <h2>Order summary</h2>
+          <dl>
+            <div><dt>Subtotal ({{ cart.itemCount }} {{ cart.itemCount === 1 ? 'item' : 'items' }})</dt><dd>{{ cart.subtotalCents | peso }}</dd></div>
+            <div><dt>Shipping</dt><dd>{{ cart.shippingFeeCents | peso }}</dd></div>
+            <div class="total"><dt>Total</dt><dd>{{ cart.totalCents | peso }}</dd></div>
+          </dl>
+          <p class="muted note"><ion-icon name="cash-outline" /> Pay with cash when your order arrives.</p>
+          <button type="button" class="btn btn--primary btn--block" (click)="checkout()">
+            {{ auth.isLoggedIn() ? 'Checkout' : 'Log in to check out' }}
+          </button>
+          <a class="btn btn--ghost btn--block" routerLink="/shop">Keep shopping</a>
+        </aside>
+      </div>
+    }
+  </section>
+</app-page>

@@ -1,2 +1,55 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+// ScenTop design tokens. Change a colour here and the whole app follows.
+// Ionic theming guide: https://ionicframework.com/docs/theming/
+
+:root {
+  // Brand
+  --st-cream: #fffaf1;
+  --st-paper: #ffffff;
+  --st-blush: #fdeef1;
+  --st-blush-deep: #f8d6de;
+  --st-rose: #c04a69;
+  --st-rose-dark: #a83a58;
+  --st-rose-soft: #e89a9f;
+  --st-gold: #8a6414;
+  --st-sky: #00bcd9;
+
+  // Text and lines
+  --st-ink: #2b2330;
+  --st-muted: #6f6577;
+  --st-line: #eadfe0;
+
+  // Feedback
+  --st-success: #23744a;
+  --st-success-bg: #e6f4ec;
+  --st-danger: #b3261e;
+  --st-danger-bg: #fbe9e7;
+  --st-warning: #8a5a00;
+  --st-warning-bg: #fff3d6;
+
+  // Shape and depth
+  --st-radius-sm: 12px;
+  --st-radius: 20px;
+  --st-radius-lg: 28px;
+  --st-shadow-sm: 0 2px 10px rgba(43, 35, 48, 0.06);
+  --st-shadow: 0 10px 34px rgba(43, 35, 48, 0.09);
+  --st-shadow-lg: 0 22px 60px rgba(43, 35, 48, 0.16);
+
+  // Type
+  --st-font-body: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --st-font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+
+  // Ionic
+  --ion-font-family: var(--st-font-body);
+  --ion-background-color: var(--st-cream);
+  --ion-background-color-rgb: 255, 250, 241;
+  --ion-text-color: var(--st-ink);
+  --ion-text-color-rgb: 43, 35, 48;
+  --ion-border-color: var(--st-line);
+
+  --ion-color-primary: #c04a69;
+  --ion-color-primary-rgb: 192, 74, 105;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #a83a58;
+  --ion-color-primary-tint: #c9597a;
+}

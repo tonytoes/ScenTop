@@ -1,0 +1,32 @@
+ion-content { --background: var(--st-cream); }
+
+.splash {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100%;
+  padding: calc(var(--ion-safe-area-top, 0px) + 24px) 28px calc(var(--ion-safe-area-bottom, 0px) + 32px);
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Soft colour behind the logo */
+.orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.55; }
+.orb--one { top: 8%; left: -20%; width: 60vmin; height: 60vmin; background: var(--st-blush-deep); }
+.orb--two { right: -25%; bottom: 14%; width: 70vmin; height: 70vmin; background: #cdeff6; }
+
+.center { position: relative; display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; }
+.logo { width: min(52vw, 240px); height: auto; animation: float 3.4s ease-in-out infinite, fade-up 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+h1 { margin-top: 12px; font-size: clamp(3rem, 12vw, 4.5rem); animation: fade-up 0.9s 0.15s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.tagline { margin-top: 8px; color: var(--st-muted); font-size: 16px; letter-spacing: 0.04em; animation: fade-up 0.9s 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+.bottom { position: relative; width: min(100%, 360px); animation: fade-up 0.9s 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.bottom > p { margin-bottom: 14px; color: var(--st-ink); font-weight: 500; }
+
+.progress { height: 3px; margin-top: 22px; overflow: hidden; border-radius: 3px; background: var(--st-line); }
+.progress span { display: block; height: 100%; background: var(--st-rose); transform-origin: left; animation: fill 2.8s linear forwards; }
+
+@keyframes float { 50% { transform: translateY(-10px) rotate(-1.5deg); } }
+@keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }

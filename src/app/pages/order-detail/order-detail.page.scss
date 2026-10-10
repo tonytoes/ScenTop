@@ -1,0 +1,46 @@
+.wrap { padding-top: 28px; }
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+.head h1 { font-size: clamp(2rem, 6vw, 3rem); }
+
+.timeline { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0 0 20px; list-style: none; }
+.timeline li { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.timeline li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: calc(50% + 18px);
+  width: calc(100% - 36px);
+  height: 3px;
+  border-radius: 3px;
+  background: var(--st-line);
+}
+.timeline li.is-done:not(:last-child)::after { background: var(--st-rose); }
+.dot { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--st-line); color: #fff; font-size: 18px; }
+.is-done .dot { background: var(--st-rose); }
+.is-current .dot { box-shadow: 0 0 0 5px rgba(192, 74, 105, 0.2); }
+.step-label { color: var(--st-muted); font-size: 12.5px; font-weight: 500; }
+.is-done .step-label { color: var(--st-ink); }
+
+.grid { display: grid; gap: 20px; align-items: start; }
+h2 { margin-bottom: 14px; font-size: 1.6rem; }
+h3 { margin: 18px 0 6px; font-size: 1.3rem; }
+
+.lines { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0 0 14px; border-bottom: 1px solid var(--st-line); list-style: none; }
+.lines li { display: flex; align-items: center; gap: 14px; }
+.lines img { width: 64px; height: 64px; object-fit: cover; border-radius: 14px; background: #fff; }
+.lines__name { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.lines__name a { color: var(--st-ink); font-weight: 500; }
+.lines__name small { color: var(--st-muted); }
+dl { display: grid; gap: 8px; margin: 14px 0 0; }
+dl > div { display: flex; justify-content: space-between; gap: 12px; color: var(--st-muted); }
+dd { margin: 0; color: var(--st-ink); font-weight: 500; }
+.total { padding-top: 10px; border-top: 1px dashed var(--st-line); color: var(--st-ink); font-weight: 600; }
+.total dd { color: var(--st-rose-dark); font-size: 18px; font-weight: 600; }
+
+.info p { margin: 0 0 4px; }
+.info .btn { margin-top: 20px; }
+.info ion-icon { vertical-align: -3px; margin-right: 4px; color: var(--st-rose); }
+
+@media (min-width: 900px) {
+  .grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 24px; }
+}

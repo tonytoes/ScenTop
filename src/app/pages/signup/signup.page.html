@@ -1,0 +1,44 @@
+<ion-content>
+  <main class="auth">
+    <aside class="auth__art" aria-hidden="true">
+      <img src="assets/images/perfumer.webp" alt="" width="1408" height="768" />
+      <div class="auth__quote">
+        <span class="eyebrow">Join ScenTop</span>
+        <p>Save your favourites and check out in seconds.</p>
+      </div>
+    </aside>
+
+    <section class="auth__panel">
+      <a class="auth__brand" routerLink="/home" aria-label="ScenTop home">
+        <img src="assets/images/logo-hat.png" alt="" width="64" height="55" />
+      </a>
+      <h1>Create your account</h1>
+      <p class="muted">It only takes a minute.</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="stack" style="--gap: 6px">
+        <div class="name-row">
+          <app-text-field label="First name" autocomplete="given-name" [control]="form.controls.firstName" />
+          <app-text-field label="Last name" autocomplete="family-name" [control]="form.controls.lastName" />
+        </div>
+        <app-text-field label="E-mail address" type="email" autocomplete="email" [control]="form.controls.email" />
+        <app-text-field label="Phone number" type="tel" autocomplete="tel" placeholder="0917 123 4567" hint="We call or text only about your orders." [control]="form.controls.phone" />
+        <app-text-field label="Password" type="password" autocomplete="new-password" hint="At least 8 characters." [control]="form.controls.password" />
+        <app-text-field label="Confirm password" type="password" autocomplete="new-password" [control]="form.controls.confirmPassword" />
+
+        @if (formError()) {
+          <p class="alert" role="alert">{{ formError() }}</p>
+        }
+
+        <button type="submit" class="btn btn--primary btn--block" [attr.aria-busy]="submitting()">
+          @if (submitting()) {
+            <span class="spinner"></span>
+          }
+          Create account
+        </button>
+        <p class="terms">By creating an account you agree to our <a routerLink="/terms">terms</a> and <a routerLink="/privacy">privacy policy</a>.</p>
+      </form>
+
+      <p class="switch">Already have an account? <a routerLink="/login" [queryParams]="loginQuery">Log in</a></p>
+    </section>
+  </main>
+</ion-content>
