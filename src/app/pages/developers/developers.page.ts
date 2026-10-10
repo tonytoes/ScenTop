@@ -5,11 +5,11 @@ import { PageComponent } from '../../layout/page/page.component';
 
 // TODO (team): replace the placeholders with the real names, roles and photos of the five developers.
 const DEVELOPERS = [
-  { name: 'Developer One', role: 'Project lead' },
-  { name: 'Developer Two', role: 'Front-end developer' },
-  { name: 'Developer Three', role: 'Front-end developer' },
-  { name: 'Developer Four', role: 'UI and UX designer' },
-  { name: 'Developer Five', role: 'Database developer' },
+  { name: 'Narvarte, Michael Ray R.', role: 'Project lead' },
+  { name: 'Lim, Michael Terrence F.', role: 'Front-end developer' },
+  { name: 'Cinco, Samuel James A. ', role: 'Front-end developer' },
+  { name: 'Demillo Orland Gabriel E. ', role: 'UI and UX designer' },
+  { name: 'Balungay, Anthony Miguel G.', role: 'Database developer' },
 ];
 
 @Component({
