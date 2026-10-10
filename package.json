@@ -4,9 +4,9 @@
   "author": "ScenTop team",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "dev": "concurrently -k -n api,web -c magenta,cyan \"npm:server\" \"npm:start\"",
-    "server": "tsx watch server/index.ts",
+    "start": "concurrently -k -n api,web -c magenta,cyan \"npm:api\" \"npm:web\"",
+    "dev": "npm start",
+    "server": "npm run api",
     "build": "ng build",
     "build:mobile": "ng build --configuration mobile",
     "build:server": "node scripts/build-server.mjs",
@@ -26,7 +26,9 @@
     "android": "npm run cap:sync && cap open android",
     "android:apk": "npm run cap:sync && node scripts/build-apk.mjs",
     "lint:server": "eslint server",
-    "lint:all": "ng lint && eslint server"
+    "lint:all": "ng lint && eslint server",
+    "api": "tsx watch server/index.ts",
+    "web": "ng serve"
   },
   "private": true,
   "dependencies": {

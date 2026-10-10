@@ -61,10 +61,11 @@ if (!existsSync(localProperties)) writeFileSync(localProperties, `sdk.dir=${sdk.
 console.log(`Using JDK:  ${jdk}\nUsing SDK:  ${sdk}\n`);
 
 const gradle = join(androidDir, isWindows ? 'gradlew.bat' : 'gradlew');
-const result = spawnSync(gradle, ['assembleDebug', '--console=plain'], {
+// .bat files must be started through cmd.exe on Windows
+const [command, args] = isWindows ? ['cmd.exe', ['/c', gradle, 'assembleDebug', '--console=plain']] : [gradle, ['assembleDebug', '--console=plain']];
+const result = spawnSync(command, args, {
   cwd: androidDir,
   stdio: 'inherit',
-  shell: isWindows,
   env: { ...process.env, JAVA_HOME: jdk, ANDROID_HOME: sdk, ANDROID_SDK_ROOT: sdk },
 });
 

@@ -19,6 +19,15 @@ async function main() {
     console.log(`[server] ScenTop is running on http://localhost:${config.port} (${config.env}, ${db.kind})`);
   });
 
+  server.on('error', (error: NodeJS.ErrnoException) => {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`[server] Port ${config.port} is already used by another program. Close it, or start with a different PORT (the Angular dev server in proxy.conf.json expects 3000).`);
+    } else {
+      console.error('[server] Server error:', error.message);
+    }
+    process.exit(1);
+  });
+
   const shutdown = () => {
     console.log('[server] Shutting down...');
     server.close(() => void db.close().then(() => process.exit(0)));
