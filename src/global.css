@@ -34,4 +34,70 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* The supplied design is intentionally light on every device. */
+
+@import "tailwindcss";
+
+@theme {
+  /* Background colors */
+  --color-island-spice-50: #fffbed; /* Main Color */
+  --color-island-spice-100: #fef2c7;
+  --color-island-spice-200: #fde38a;
+  --color-island-spice-300: #fccf4d;
+  --color-island-spice-400: #fbba24;
+  --color-island-spice-500: #f5990b;
+  --color-island-spice-600: #d97206;
+  --color-island-spice-700: #b44f09;
+  --color-island-spice-800: #923d0e;
+  --color-island-spice-900: #78330f;
+  --color-island-spice-950: #451903;
+
+  /* btn colors and icon fill */
+  --color-wewak-50: #fff1f3;
+  --color-wewak-100: #ffe3e7;
+  --color-wewak-200: #ffccd5;
+  --color-wewak-300: #ffa6b6; /* Main Color */
+  --color-wewak-400: #fe6e8b;
+  --color-wewak-500: #f83b66;
+  --color-wewak-600: #e51951;
+  --color-wewak-700: #c20e44;
+  --color-wewak-800: #a20f40;
+  --color-wewak-900: #8b103d;
+  --color-wewak-950: #4e031c;
+
+  /* Title Header */
+  --color-masala-50: #fafafa;
+  --color-masala-100: #f5f5f5;
+  --color-masala-200: #e6e6e6;
+  --color-masala-300: #d3d3d3;
+  --color-masala-400: #a3a3a3;
+  --color-masala-500: #727272;
+  --color-masala-600: #535353;
+  --color-masala-700: #474747; /* Main Color */
+  --color-masala-800: #272727;
+  --color-masala-900: #1a1a1a;
+  --color-masala-950: #0b0b0b;
+
+  /* Descriptions */
+  --color-storm-dust-50: #fafafa;
+  --color-storm-dust-100: #f5f5f5;
+  --color-storm-dust-200: #e6e6e6;
+  --color-storm-dust-300: #d3d3d3;
+  --color-storm-dust-400: #a3a3a3;
+  --color-storm-dust-500: #727272;
+  --color-storm-dust-600: #5e5e5e; /* Main Color */
+  --color-storm-dust-700: #404040;
+  --color-storm-dust-800: #272727;
+  --color-storm-dust-900: #1a1a1a;
+  --color-storm-dust-950: #0b0b0b;
+}
+
+:root {
+  --ion-font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+  color-scheme: light;
+}
+
+html,
+body {
+  background: #fffaf0;
+}
