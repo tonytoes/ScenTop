@@ -7,7 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@ionic/angular-toolkit:page": {
-          "styleext": "scss",
+          "styleext": "css",
           "standalone": true
         }
       },
@@ -25,7 +25,7 @@
             "index": "src/index.html",
             "polyfills": [],
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
+            "inlineStyleLanguage": "css",
             "assets": [
               {
                 "glob": "**/*",
@@ -33,7 +33,7 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "styles": ["src/global.css", "src/theme/variables.css"],
             "scripts": [],
             "browser": "src/main.ts"
           },
@@ -119,11 +119,11 @@
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {
-      "styleext": "scss",
+      "styleext": "css",
       "standalone": true
     },
     "@ionic/angular-toolkit:page": {
-      "styleext": "scss",
+      "styleext": "css",
       "standalone": true
     },
     "@angular-eslint/schematics:application": {
