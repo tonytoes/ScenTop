@@ -78,6 +78,7 @@ export function authRouter(ctx: AppContext): Router {
 
     const passwordOk = await checkPassword(input.password, user?.password_hash ?? dummyHash);
     if (!user || !passwordOk) throw new HttpError(401, 'Incorrect e-mail or password.', 'invalid_credentials');
+    if (user.is_disabled) throw new HttpError(403, 'This account has been disabled. Please contact the shop.', 'account_disabled');
 
     res.json(session(user));
   });

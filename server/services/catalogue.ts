@@ -60,7 +60,8 @@ export async function summarise(q: Queryable, rows: Row[]): Promise<ProductSumma
 
 export async function listProducts(db: Db, query: ListQuery): Promise<{ items: ProductSummaryDto[]; total: number }> {
   const params: unknown[] = [];
-  const where: string[] = [];
+  // Perfumes hidden from the admin side never show in the shop
+  const where: string[] = ['p.is_active'];
   const add = (value: unknown) => `$${params.push(value)}`;
 
   if (query.q) {
@@ -77,7 +78,7 @@ export async function listProducts(db: Db, query: ListQuery): Promise<{ items: P
   if (query.collection === 'new') where.push('p.is_new_arrival');
   if (query.ids) where.push(`p.id = ANY(${add(query.ids)}::int[])`);
 
-  const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+  const whereSql = `WHERE ${where.join(' AND ')}`;
 
   const [{ total }] = (await db.query<{ total: number }>(
     `SELECT count(*)::int AS total FROM products p ${whereSql}`,
@@ -96,7 +97,7 @@ export async function listProducts(db: Db, query: ListQuery): Promise<{ items: P
 
 export async function getProduct(db: Db, idOrSlug: string): Promise<ProductDetailDto> {
   const byId = /^\d+$/.test(idOrSlug);
-  const [row] = await db.query(`${SUMMARY_SQL} WHERE ${byId ? 'p.id' : 'p.slug'} = $1`, [byId ? Number(idOrSlug) : idOrSlug]);
+  const [row] = await db.query(`${SUMMARY_SQL} WHERE ${byId ? 'p.id' : 'p.slug'} = $1 AND p.is_active`, [byId ? Number(idOrSlug) : idOrSlug]);
   if (!row) throw notFound('We could not find that perfume.');
 
   const [summary] = await summarise(db, [row]);
@@ -105,7 +106,7 @@ export async function getProduct(db: Db, idOrSlug: string): Promise<ProductDetai
 
 export async function categoryCounts(db: Db): Promise<{ name: string; count: number }[]> {
   const rows = await db.query<{ category: string; count: number }>(
-    'SELECT category, count(*)::int AS count FROM products GROUP BY category',
+    'SELECT category, count(*)::int AS count FROM products WHERE is_active GROUP BY category',
   );
   const counts = new Map(rows.map((row) => [row.category, row.count]));
   return categories.map((name) => ({ name, count: counts.get(name) ?? 0 }));
@@ -113,7 +114,7 @@ export async function categoryCounts(db: Db): Promise<{ name: string; count: num
 
 export async function wishlistProducts(q: Queryable, userId: number): Promise<ProductSummaryDto[]> {
   const rows = await q.query(
-    `${SUMMARY_SQL} JOIN wishlist_items w ON w.product_id = p.id WHERE w.user_id = $1 ORDER BY w.created_at DESC`,
+    `${SUMMARY_SQL} JOIN wishlist_items w ON w.product_id = p.id WHERE w.user_id = $1 AND p.is_active ORDER BY w.created_at DESC`,
     [userId],
   );
   return summarise(q, rows);

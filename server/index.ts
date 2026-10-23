@@ -4,6 +4,7 @@ import { loadConfig } from './config';
 import { createDb } from './db';
 import { migrate } from './db/migrate';
 import { seedIfEmpty } from './db/seed';
+import { ensureAdmin } from './db/admin';
 
 async function main() {
   const config = loadConfig();
@@ -13,6 +14,8 @@ async function main() {
     const applied = await migrate(db);
     if (applied.length > 0) console.log(`[db] Applied migrations: ${applied.join(', ')}`);
     if (await seedIfEmpty(db)) console.log('[db] Empty catalogue - added the starter perfumes');
+    const admin = await ensureAdmin(db, config);
+    if (admin) console.log(`[db] Created the admin account ${admin} (password: ADMIN_PASSWORD, or see .env.example)`);
   }
 
   const server = createApp({ db, config }).listen(config.port, () => {

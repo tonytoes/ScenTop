@@ -1,0 +1,232 @@
+<div class="page">
+  <header class="page-head">
+    <div>
+      <h1>Customers</h1>
+      <p>{{ range().total }} accounts · open one to see everything they bought</p>
+    </div>
+    <label class="search">
+      <app-icon name="search" />
+      <input class="input" type="search" placeholder="Name, e-mail or phone" [(ngModel)]="query" (ngModelChange)="search()" aria-label="Search customers" />
+    </label>
+  </header>
+
+  <div class="filters">
+    <div class="seg">
+      @for (s of sorts; track s.key) {
+        <button type="button" [class.on]="sort() === s.key" (click)="setSort(s.key)">{{ s.label }}</button>
+      }
+    </div>
+    <div class="seg">
+      <button type="button" [class.on]="role() === ''" (click)="setRole('')">Everyone</button>
+      <button type="button" [class.on]="role() === 'customer'" (click)="setRole('customer')">Customers</button>
+      <button type="button" [class.on]="role() === 'admin'" (click)="setRole('admin')">Admins</button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert" role="alert">{{ error() }}</div>
+  }
+
+  <div class="table-wrap" [class.loading]="loading()">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Phone</th>
+          <th>Joined</th>
+          <th>Last order</th>
+          <th class="num">Orders</th>
+          <th>Lifetime spend</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (u of page()?.items ?? []; track u.id) {
+          <tr (click)="select(u)" [class.selected]="detail()?.user?.id === u.id" tabindex="0" (keydown.enter)="select(u)">
+            <td>
+              <div class="who">
+                @if (u.photoUrl) {
+                  <img class="avatar" [src]="u.photoUrl" alt="" />
+                } @else {
+                  <span class="avatar">{{ initials(u.firstName + ' ' + u.lastName) }}</span>
+                }
+                <span>
+                  <b>
+                    {{ u.firstName }} {{ u.lastName }}
+                    @if (u.role === 'admin') {
+                      <span class="tag admin">Admin</span>
+                    }
+                    @if (u.isDisabled) {
+                      <span class="tag off">Disabled</span>
+                    }
+                  </b>
+                  <small>{{ u.email }}</small>
+                </span>
+              </div>
+            </td>
+            <td class="muted">{{ u.phone || '—' }}</td>
+            <td class="muted">{{ u.createdAt | ago }}</td>
+            <td class="muted">{{ u.lastOrderAt | ago }}</td>
+            <td class="num">{{ u.orderCount }}</td>
+            <td>
+              <div class="spend">
+                <b class="tabular">{{ u.totalSpentCents | peso: 'whole' }}</b>
+                <i><em [style.width.%]="(u.totalSpentCents / maxSpent()) * 100"></em></i>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6"><div class="empty">{{ loading() ? 'Loading…' : 'No customers match.' }}</div></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pager">
+    <span>{{ range().from }}–{{ range().to }} of {{ range().total }}</span>
+    <span class="toolbar">
+      <button class="btn btn-sm" type="button" (click)="go(-1)" [disabled]="offset() === 0">Previous</button>
+      <button class="btn btn-sm" type="button" (click)="go(1)" [disabled]="range().to >= range().total">Next</button>
+    </span>
+  </div>
+</div>
+
+@if (detail(); as d) {
+  <div class="scrim" (click)="close()" aria-hidden="true"></div>
+  <aside class="drawer profile" role="dialog" aria-modal="true" [attr.aria-label]="d.user.firstName + ' ' + d.user.lastName">
+    <header>
+      <div class="id-card">
+        @if (d.user.photoUrl) {
+          <img class="avatar xl" [src]="d.user.photoUrl" alt="" />
+        } @else {
+          <span class="avatar xl">{{ initials(d.user.firstName + ' ' + d.user.lastName) }}</span>
+        }
+        <div>
+          <h2 class="display big">{{ d.user.firstName }} {{ d.user.lastName }}</h2>
+          <div class="chips">
+            <span class="tag" [class.admin]="d.user.role === 'admin'">{{ d.user.role === 'admin' ? 'Admin' : 'Customer' }}</span>
+            @if (d.user.isDisabled) {
+              <span class="tag off">Disabled</span>
+            }
+            <span class="muted">joined {{ d.user.createdAt | ago }}</span>
+          </div>
+        </div>
+      </div>
+      <button class="icon-btn" type="button" (click)="close()" aria-label="Close"><app-icon name="close" /></button>
+    </header>
+
+    <div class="body">
+      <div class="contact">
+        <a [href]="'mailto:' + d.user.email"><app-icon name="mail" [size]="14" />{{ d.user.email }}</a>
+        <span><app-icon name="phone" [size]="14" />{{ d.user.phone || 'no phone' }}</span>
+        <span><app-icon name="pin" [size]="14" />{{ d.user.address || 'no saved address' }}</span>
+      </div>
+
+      @if (stats(); as s) {
+        <div class="lifetime">
+          <div class="big-stat">
+            <span class="eyebrow">Lifetime value</span>
+            <b class="display">{{ s.spent | peso: 'whole' }}</b>
+            @if (s.trend.length > 1) {
+              <app-spark [values]="s.trend" kind="bars" />
+            }
+          </div>
+          <dl>
+            <div><dt>Orders</dt><dd>{{ s.orders }}</dd></div>
+            <div><dt>Avg. basket</dt><dd>{{ s.average | peso: 'short' }}</dd></div>
+            <div><dt>First order</dt><dd>{{ s.first | ago }}</dd></div>
+            <div><dt>Favourite</dt><dd class="fav">{{ s.favourite }}</dd></div>
+          </dl>
+        </div>
+      }
+
+      <section class="block">
+        <h3>Buy history <span>{{ d.orders.length }}</span></h3>
+        <ol class="history">
+          @for (o of d.orders; track o.id) {
+            <li [class.open]="openOrder() === o.id">
+              <button type="button" (click)="toggleOrder(o.id)" [attr.aria-expanded]="openOrder() === o.id">
+                <span class="when">
+                  <b>{{ o.orderNumber }}</b>
+                  <small class="muted">{{ o.createdAt | ago }} · {{ o.itemCount }} item{{ o.itemCount === 1 ? '' : 's' }}</small>
+                </span>
+                <span class="badge status-{{ o.status }}">{{ statusLabel[o.status] }}</span>
+                <b class="tabular">{{ o.totalCents | peso: 'whole' }}</b>
+              </button>
+              @if (openOrder() === o.id) {
+                <ul>
+                  @for (item of o.items; track $index) {
+                    <li>
+                      <img class="thumb" [src]="item.imageUrl" alt="" />
+                      <span>{{ item.name }} <small class="muted">{{ item.sizeMl }} ml × {{ item.quantity }}</small></span>
+                      <span class="tabular">{{ item.unitPriceCents * item.quantity | peso: 'whole' }}</span>
+                    </li>
+                  }
+                  <li class="go"><a routerLink="/orders" [queryParams]="{ id: o.id }">Open order <app-icon name="arrowRight" [size]="14" /></a></li>
+                </ul>
+              }
+            </li>
+          } @empty {
+            <li class="muted none">No orders yet.</li>
+          }
+        </ol>
+      </section>
+
+      <div class="duo">
+        <section class="block">
+          <h3>In their cart <span>{{ stats()?.cartValue ?? 0 | peso: 'short' }}</span></h3>
+          <div class="mini-list">
+            @for (c of d.cart; track $index) {
+              <span class="mini"><img [src]="c.imageUrl" alt="" />{{ c.name }} · {{ c.sizeMl }}ml × {{ c.quantity }}</span>
+            } @empty {
+              <span class="muted">Empty</span>
+            }
+          </div>
+        </section>
+        <section class="block">
+          <h3>Wishlist <span>{{ d.wishlist.length }}</span></h3>
+          <div class="mini-list">
+            @for (w of d.wishlist; track w.id) {
+              <span class="mini"><img [src]="w.imageUrl" alt="" />{{ w.name }}</span>
+            } @empty {
+              <span class="muted">Nothing saved</span>
+            }
+          </div>
+        </section>
+      </div>
+
+      @if (d.reviews.length) {
+        <section class="block">
+          <h3>Reviews <span>{{ d.reviews.length }}</span></h3>
+          <ul class="reviews">
+            @for (r of d.reviews; track $index) {
+              <li>
+                <span class="stars" [attr.aria-label]="r.rating + ' out of 5'">{{ '★'.repeat(r.rating) }}<em>{{ '★'.repeat(5 - r.rating) }}</em></span>
+                <b>{{ r.product }}</b>
+                @if (r.comment) {
+                  <p>{{ r.comment }}</p>
+                }
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+
+    <footer>
+      @if (d.user.id !== me.user()?.id) {
+        <button class="btn btn-danger" type="button" (click)="remove(d.user)" [disabled]="busy()"><app-icon name="trash" [size]="16" /> Delete</button>
+        <span class="spacer"></span>
+        <button class="btn" type="button" (click)="toggleDisabled(d.user)" [disabled]="busy()">
+          <app-icon [name]="d.user.isDisabled ? 'check' : 'ban'" [size]="16" /> {{ d.user.isDisabled ? 'Enable account' : 'Disable' }}
+        </button>
+        <button class="btn btn-primary" type="button" (click)="toggleAdmin(d.user)" [disabled]="busy()">
+          <app-icon name="shield" [size]="16" /> {{ d.user.role === 'admin' ? 'Remove admin' : 'Make admin' }}
+        </button>
+      } @else {
+        <span class="muted">This is you. Another admin can change your access.</span>
+      }
+    </footer>
+  </aside>
+}

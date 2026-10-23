@@ -20,6 +20,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
 COPY --from=build /app/www ./www
+COPY --from=build /app/www-admin ./www-admin
 COPY --from=build /app/dist-server ./dist-server
 
 USER node

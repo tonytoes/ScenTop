@@ -1,6 +1,6 @@
 import type { Request, RequestHandler } from 'express';
 import type { AppContext } from '../context';
-import { unauthorized } from '../lib/errors';
+import { forbidden, unauthorized } from '../lib/errors';
 import { readToken } from '../lib/security';
 import type { Row } from '../db';
 
@@ -23,8 +23,19 @@ export function requireAuth(ctx: AppContext): RequestHandler {
 
     const [user] = await ctx.db.query('SELECT * FROM users WHERE id = $1', [userId]);
     if (!user) throw unauthorized('This account no longer exists.');
+    if (user.is_disabled) throw unauthorized('This account has been disabled. Please contact the shop.');
 
     req.user = user;
+    next();
+  };
+}
+
+/** Like requireAuth, but only lets shop admins through. */
+export function requireAdmin(ctx: AppContext): RequestHandler {
+  const auth = requireAuth(ctx);
+  return async (req, res, next) => {
+    await auth(req, res, () => undefined);
+    if (req.user?.role !== 'admin') throw forbidden('Only shop admins can do that.');
     next();
   };
 }

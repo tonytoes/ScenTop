@@ -1,0 +1,314 @@
+<div class="page">
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">{{ today }}</span>
+      <h1>{{ greeting }}, {{ auth.user()?.firstName }}</h1>
+    </div>
+    <div class="toolbar">
+      <div class="seg" role="tablist" aria-label="Date range">
+        @for (r of ranges; track r.days) {
+          <button type="button" role="tab" [class.on]="days() === r.days" [attr.aria-selected]="days() === r.days" (click)="setRange(r.days)">{{ r.label }}</button>
+        }
+      </div>
+      <button class="icon-btn" type="button" (click)="load()" aria-label="Refresh" title="Refresh" [class.spin]="loading()">
+        <app-icon name="refresh" [size]="16" />
+      </button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <div class="alert" role="alert">{{ error() }}</div>
+  }
+
+  @if (data(); as d) {
+    <!-- What needs doing now -->
+    <div class="todo">
+      <a routerLink="/orders" [queryParams]="{ status: 'pending' }" class="todo-chip" [class.hot]="d.totals.toConfirm > 0">
+        <app-icon name="clock" [size]="16" />
+        <b>{{ d.totals.toConfirm }}</b> to confirm
+      </a>
+      <a routerLink="/orders" [queryParams]="{ status: 'confirmed' }" class="todo-chip">
+        <app-icon name="truck" [size]="16" />
+        <b>{{ d.totals.toShip }}</b> ready to ship
+      </a>
+      <a routerLink="/messages" class="todo-chip">
+        <app-icon name="inbox" [size]="16" />
+        <b>{{ d.totals.newMessages }}</b> messages this week
+      </a>
+      <span class="todo-chip quiet">
+        <app-icon name="star" [size]="16" />
+        <b>{{ d.totals.rating || '—' }}</b> avg rating · {{ d.totals.reviews }} reviews
+      </span>
+    </div>
+
+    <div class="bento" [class.loading]="loading()">
+      <!-- Statement card: revenue -->
+      <section class="hero">
+        <div class="hero-top">
+          <div>
+            <span class="eyebrow">Revenue · last {{ rangeLabel() }}</span>
+            <div class="hero-value display">{{ d.kpis.revenue.value | peso: 'whole' }}</div>
+            <div class="hero-sub">
+              <span class="pill" [class.down]="!delta(d.kpis.revenue).good">
+                <app-icon [name]="delta(d.kpis.revenue).up ? 'arrowUp' : 'arrowDown'" [size]="13" />
+                {{ delta(d.kpis.revenue).text }}
+              </span>
+              <span>vs {{ d.kpis.revenue.previous | peso: 'whole' }} the {{ rangeLabel() }} before</span>
+            </div>
+          </div>
+          <div class="hero-legend">
+            <span><i class="now"></i>This period</span>
+            <span><i class="before"></i>Previous</span>
+          </div>
+        </div>
+        <app-area-chart [points]="area()" [height]="250" />
+        <div class="hero-foot">
+          <div><b class="tabular">{{ d.kpis.buyers.value }}</b><small>buyers</small></div>
+          <div><b class="tabular">{{ d.totals.customers }}</b><small>customers in total</small></div>
+          <div><b class="tabular">{{ (d.totals.repeatRate * 100).toFixed(0) }}%</b><small>bought more than once</small></div>
+          <div><b class="tabular">{{ d.totals.products }}</b><small>perfumes on sale</small></div>
+        </div>
+      </section>
+
+      <!-- Month to date vs last month -->
+      @if (month(); as m) {
+        <section class="card month">
+          <div class="card-title">
+            <h2>This month so far</h2>
+            <small>day {{ m.dayOfMonth }} of {{ m.daysInMonth }}</small>
+          </div>
+          <app-ring-gauge [value]="m.revenue" [target]="m.lastMonthRevenue" [pace]="m.pace" ariaLabel="Month to date revenue compared with all of last month">
+            <div>
+              <div class="display gauge-value">{{ m.revenue | peso: 'short' }}</div>
+              <small class="muted">{{ m.pct === null ? 'first month' : m.pct + '% of last month' }}</small>
+            </div>
+          </app-ring-gauge>
+          <div class="month-foot">
+            <div>
+              <small class="muted">Last month</small>
+              <b>{{ m.lastMonthRevenue | peso: 'short' }}</b>
+            </div>
+            <div>
+              <small class="muted">On pace for</small>
+              <b>{{ m.projected | peso: 'short' }}</b>
+            </div>
+          </div>
+          <p class="pace-note" [class.ahead]="m.ahead">
+            <i></i>{{ m.ahead ? 'Ahead of' : 'Behind' }} last month's pace (the tick mark)
+          </p>
+        </section>
+      }
+
+      <!-- KPI tiles: each with its own small chart shape -->
+      @for (k of kpis(); track k.key) {
+        <section class="card kpi">
+          <div class="kpi-head">
+            <span class="eyebrow">{{ k.label }}</span>
+            <span class="delta" [class.bad]="!k.delta.good">{{ k.delta.text }}</span>
+          </div>
+          <div class="kpi-value display">{{ k.value }}</div>
+          <app-spark [values]="k.spark" [kind]="k.kind" />
+        </section>
+      }
+      @if (cancel(); as c) {
+        <section class="card kpi cancel">
+          <div class="kpi-head">
+            <span class="eyebrow">Cancelled</span>
+            <span class="delta" [class.bad]="!c.delta.good">{{ c.delta.text }}</span>
+          </div>
+          <div class="kpi-value display">{{ c.pct }}%</div>
+          <div class="meter" role="img" [attr.aria-label]="c.pct + '% of orders were cancelled'">
+            @for (i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track i) {
+              <i [class.on]="c.pct > i * 2" [class.warn]="i >= 5"></i>
+            }
+          </div>
+          <small class="muted scale-note"><span>0%</span><span>20%+</span></small>
+        </section>
+      }
+
+      <!-- Order pipeline -->
+      <section class="card pipeline">
+        <div class="card-title">
+          <h2>Order pipeline</h2>
+          <small>{{ pipeline().active }} orders · {{ pipeline().delivered }}% delivered</small>
+        </div>
+        <div class="flow">
+          @for (step of pipeline().flow; track step.status; let i = $index) {
+            <a class="stage stage-{{ step.status }}" routerLink="/orders" [queryParams]="{ status: step.status }" [style.flex-grow]="0.6 + step.share * 4">
+              <span class="stage-n">0{{ i + 1 }}</span>
+              <b class="display">{{ step.count }}</b>
+              <span class="stage-label">{{ step.label }}</span>
+              <span class="stage-pct">{{ (step.share * 100).toFixed(0) }}%</span>
+            </a>
+          }
+        </div>
+        <div class="flow-foot">
+          <span class="badge status-cancelled">{{ pipeline().cancelled }} cancelled</span>
+          <span class="muted">Click a stage to open those orders</span>
+        </div>
+      </section>
+
+      <!-- Category mix -->
+      <section class="card categories">
+        <div class="card-title">
+          <h2>Sales by family</h2>
+          <small>hover a ring</small>
+        </div>
+        <app-radial-bars [items]="categories()" />
+        <ul class="cat-legend">
+          @for (c of categories(); track c.label) {
+            <li><i [style.background]="c.color"></i>{{ c.label }}<b>{{ c.value | peso: 'short' }}</b></li>
+          }
+        </ul>
+      </section>
+
+      <!-- When people shop -->
+      <section class="card heat">
+        <div class="card-title">
+          <h2>When people shop</h2>
+          <small>Philippine time</small>
+        </div>
+        <app-punch-card [cells]="d.heatmap" />
+      </section>
+
+      <!-- Who buys -->
+      <section class="card who-buys">
+        <div class="card-title">
+          <h2>Who it's for</h2>
+          <small>bottles sold</small>
+        </div>
+        <app-waffle [items]="audience()" ariaLabel="Bottles sold by audience" />
+        <div class="sizes">
+          <span class="eyebrow">Bottle size</span>
+          <div class="split" role="img" aria-label="Bottles sold by size">
+            @for (s of sizes(); track s.sizeMl) {
+              <span [style.flex-grow]="s.share" [style.background]="s.color"></span>
+            }
+          </div>
+          <div class="split-legend">
+            @for (s of sizes(); track s.sizeMl) {
+              <span><i [style.background]="s.color"></i>{{ s.sizeMl }} ml · <b>{{ (s.share * 100).toFixed(0) }}%</b> · {{ s.revenue | peso: 'short' }}</span>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- Best sellers -->
+      <section class="card top">
+        <div class="card-title">
+          <h2>Best sellers</h2>
+          <a routerLink="/products" class="link">All perfumes <app-icon name="arrowRight" [size]="14" /></a>
+        </div>
+        <ol class="leaders">
+          @for (p of d.topProducts; track p.id; let i = $index) {
+            <li>
+              <span class="rank display">{{ i + 1 }}</span>
+              <img class="thumb" [src]="p.imageUrl" alt="" />
+              <div class="leader-body">
+                <div class="leader-line">
+                  <b>{{ p.name }}</b>
+                  <span class="tabular">{{ p.revenue | peso: 'short' }}</span>
+                </div>
+                <div class="bar"><i [style.width.%]="(p.revenue / topMax()) * 100"></i></div>
+                <small class="muted">{{ p.category }} · {{ p.units }} bottles</small>
+              </div>
+            </li>
+          } @empty {
+            <li class="empty">No sales in this period yet.</li>
+          }
+        </ol>
+      </section>
+
+      <!-- New vs returning -->
+      <section class="card mix">
+        <div class="card-title">
+          <h2>New vs returning</h2>
+          <small>orders per week</small>
+        </div>
+        <app-mirror-bars [data]="d.customerMix" />
+      </section>
+
+      <!-- Opportunity stack -->
+      <section class="stack">
+        <div class="card carts">
+          <span class="eyebrow">Waiting in carts</span>
+          <div class="display carts-value">{{ d.carts.valueCents | peso: 'short' }}</div>
+          <small class="muted">{{ d.carts.items }} bottles · {{ d.carts.shoppers }} shoppers haven't checked out</small>
+        </div>
+        <div class="card wished">
+          <div class="card-title">
+            <h2>Most wished for</h2>
+            <app-icon name="heart" [size]="16" />
+          </div>
+          <ul>
+            @for (w of d.mostWished; track w.id) {
+              <li><img class="thumb" [src]="w.imageUrl" alt="" /><span>{{ w.name }}</span><b>{{ w.saves }}</b></li>
+            } @empty {
+              <li class="muted">No saved perfumes yet.</li>
+            }
+          </ul>
+        </div>
+      </section>
+
+      <!-- Top customers -->
+      <section class="card vips">
+        <div class="card-title">
+          <h2>Top customers</h2>
+          <small>this period</small>
+        </div>
+        <ul>
+          @for (c of d.topCustomers; track c.id; let i = $index) {
+            <li>
+              <a class="who" routerLink="/customers" [queryParams]="{ id: c.id }">
+                @if (c.photoUrl) {
+                  <img class="avatar" [src]="c.photoUrl" alt="" />
+                } @else {
+                  <span class="avatar" [style.background]="seriesColor[i]" style="color: #fff">{{ initials(c.name) }}</span>
+                }
+                <span><b>{{ c.name }}</b><small>{{ c.orders }} orders</small></span>
+              </a>
+              <b class="tabular">{{ c.spentCents | peso: 'short' }}</b>
+            </li>
+          } @empty {
+            <li class="muted">No buyers in this period yet.</li>
+          }
+        </ul>
+      </section>
+
+      <!-- Live feed -->
+      <section class="card feed">
+        <div class="card-title">
+          <h2>Latest orders</h2>
+          <a routerLink="/orders" class="link">All orders <app-icon name="arrowRight" [size]="14" /></a>
+        </div>
+        <ul class="timeline">
+          @for (o of d.recentOrders; track o.id) {
+            <li>
+              <i class="dot status-{{ o.status }}"></i>
+              <a routerLink="/orders" [queryParams]="{ id: o.id }">
+                <span>
+                  <b>{{ o.customer }}</b>
+                  <small class="muted">{{ o.orderNumber }} · {{ o.items }} item{{ o.items === 1 ? '' : 's' }} · {{ o.createdAt | ago }}</small>
+                </span>
+                <span class="right">
+                  <b class="tabular">{{ o.totalCents | peso: 'whole' }}</b>
+                  <span class="badge status-{{ o.status }}">{{ statusLabel[o.status] }}</span>
+                </span>
+              </a>
+            </li>
+          } @empty {
+            <li class="muted">No orders yet. Try the demo data from the launcher.</li>
+          }
+        </ul>
+      </section>
+    </div>
+  } @else if (loading()) {
+    <div class="bento">
+      <div class="skeleton hero" style="height: 420px"></div>
+      <div class="skeleton month" style="height: 420px"></div>
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton kpi" style="height: 150px"></div>
+      }
+    </div>
+  }
+</div>

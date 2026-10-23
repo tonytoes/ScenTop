@@ -1,0 +1,161 @@
+<div class="page">
+  <header class="page-head">
+    <div>
+      <h1>Orders</h1>
+      <p>{{ allCount() }} orders · move them from pending to delivered</p>
+    </div>
+    <label class="search">
+      <app-icon name="search" />
+      <input class="input" type="search" placeholder="Name, phone, e-mail or order no." [(ngModel)]="query" (ngModelChange)="search()" aria-label="Search orders" />
+    </label>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" [class.on]="!status()" (click)="setStatus(undefined)">
+      All <span>{{ allCount() }}</span>
+    </button>
+    @for (s of statuses; track s) {
+      <button type="button" role="tab" class="tab-{{ s }}" [class.on]="status() === s" (click)="setStatus(s)">
+        <i></i>{{ label[s] }} <span>{{ page()?.counts?.[s] ?? 0 }}</span>
+      </button>
+    }
+  </div>
+
+  @if (error()) {
+    <div class="alert" role="alert">{{ error() }}</div>
+  }
+
+  <div class="table-wrap" [class.loading]="loading()">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Customer</th>
+          <th>Items</th>
+          <th>Placed</th>
+          <th>Status</th>
+          <th class="num">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (order of page()?.items ?? []; track order.id) {
+          <tr (click)="select(order)" [class.selected]="selected()?.id === order.id" tabindex="0" (keydown.enter)="select(order)">
+            <td><b class="tabular">{{ order.orderNumber }}</b></td>
+            <td>
+              <div class="who">
+                <span>
+                  <b>{{ order.shipName }}</b>
+                  <small>{{ order.customer?.email ?? 'guest / deleted account' }}</small>
+                </span>
+              </div>
+            </td>
+            <td>
+              <div class="stack-thumbs">
+                @for (item of order.items.slice(0, 3); track $index) {
+                  <img [src]="item.imageUrl" [alt]="item.name" [title]="item.name" />
+                }
+                @if (order.items.length > 3) {
+                  <span>+{{ order.items.length - 3 }}</span>
+                }
+              </div>
+            </td>
+            <td class="muted">{{ order.createdAt | ago }}</td>
+            <td><span class="badge status-{{ order.status }}">{{ label[order.status] }}</span></td>
+            <td class="num"><b>{{ order.totalCents | peso }}</b></td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6"><div class="empty">{{ loading() ? 'Loading…' : 'No orders match.' }}</div></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pager">
+    <span>{{ range().from }}–{{ range().to }} of {{ range().total }}</span>
+    <span class="toolbar">
+      <button class="btn btn-sm" type="button" (click)="go(-1)" [disabled]="offset() === 0">Previous</button>
+      <button class="btn btn-sm" type="button" (click)="go(1)" [disabled]="range().to >= range().total">Next</button>
+    </span>
+  </div>
+</div>
+
+@if (selected(); as o) {
+  <div class="scrim" (click)="close()" aria-hidden="true"></div>
+  <aside class="drawer" role="dialog" aria-modal="true" [attr.aria-label]="'Order ' + o.orderNumber">
+    <header>
+      <div>
+        <span class="eyebrow">Order</span>
+        <h2 class="display big">{{ o.orderNumber }}</h2>
+        <small class="muted">Placed {{ o.createdAt | ago }} · {{ o.paymentMethod === 'cod' ? 'Cash on delivery' : o.paymentMethod }}</small>
+      </div>
+      <button class="icon-btn" type="button" (click)="close()" aria-label="Close"><app-icon name="close" /></button>
+    </header>
+
+    <div class="body">
+      @if (o.status === 'cancelled') {
+        <div class="cancelled-note"><app-icon name="ban" [size]="16" /> This order was cancelled.</div>
+      } @else {
+        <ol class="stepper">
+          @for (step of steps; track step) {
+            <li [class]="stepState(o, step)">
+              <i><app-icon name="check" [size]="12" /></i>
+              <span>{{ label[step] }}</span>
+            </li>
+          }
+        </ol>
+      }
+
+      <section class="block">
+        <h3>Ship to</h3>
+        <div class="ship">
+          <p><b>{{ o.shipName }}</b></p>
+          <p class="line"><app-icon name="phone" [size]="14" />{{ o.shipPhone || '—' }}</p>
+          <p class="line"><app-icon name="pin" [size]="14" />{{ o.shipAddress || '—' }}</p>
+          @if (o.customer; as c) {
+            <a class="line link" routerLink="/customers" [queryParams]="{ id: c.id }"><app-icon name="customers" [size]="14" />{{ c.name }} · {{ c.email }}</a>
+          }
+          @if (o.notes) {
+            <p class="notes">“{{ o.notes }}”</p>
+          }
+        </div>
+      </section>
+
+      <section class="block">
+        <h3>{{ o.itemCount }} item{{ o.itemCount === 1 ? '' : 's' }}</h3>
+        <ul class="items">
+          @for (item of o.items; track $index) {
+            <li>
+              <img class="thumb" [src]="item.imageUrl" alt="" />
+              <span>
+                <b>{{ item.name }}</b>
+                <small class="muted">{{ item.sizeMl }} ml · {{ item.unitPriceCents | peso }} × {{ item.quantity }}</small>
+              </span>
+              <b class="tabular">{{ item.unitPriceCents * item.quantity | peso }}</b>
+            </li>
+          }
+        </ul>
+        <dl class="sum">
+          <dt>Subtotal</dt><dd>{{ o.subtotalCents | peso }}</dd>
+          <dt>Shipping</dt><dd>{{ o.shippingFeeCents | peso }}</dd>
+          <dt class="total">Total</dt><dd class="total">{{ o.totalCents | peso }}</dd>
+        </dl>
+      </section>
+    </div>
+
+    <footer>
+      @if (o.status !== 'cancelled' && o.status !== 'delivered') {
+        <button class="btn btn-danger" type="button" (click)="setOrderStatus(o, 'cancelled')" [disabled]="saving()">Cancel order</button>
+      }
+      @if (o.status === 'cancelled') {
+        <button class="btn" type="button" (click)="setOrderStatus(o, 'pending')" [disabled]="saving()">Reopen as pending</button>
+      }
+      @if (nextStatus(o.status); as next) {
+        <button class="btn btn-primary" type="button" (click)="setOrderStatus(o, next)" [disabled]="saving()">
+          {{ nextAction[o.status] }} <app-icon name="arrowRight" [size]="16" />
+        </button>
+      }
+    </footer>
+  </aside>
+}

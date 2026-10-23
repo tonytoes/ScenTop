@@ -1,0 +1,10 @@
+/* The admin app (ng serve admin). Shares compiler settings with the shop. */
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/admin",
+    "types": []
+  },
+  "files": ["src/main.ts"],
+  "include": ["src/**/*.d.ts"]
+}

@@ -54,7 +54,7 @@ export async function getCart(q: Queryable, userId: number): Promise<CartDto> {
      FROM cart_items ci
      JOIN product_variants v ON v.id = ci.variant_id
      JOIN products p ON p.id = v.product_id
-     WHERE ci.user_id = $1
+     WHERE ci.user_id = $1 AND p.is_active
      ORDER BY ci.created_at, ci.variant_id`,
     [userId],
   );
@@ -73,7 +73,7 @@ export async function previewCart(q: Queryable, lines: CartLine[]): Promise<Cart
     `${LINE_SQL}
      FROM product_variants v
      JOIN products p ON p.id = v.product_id
-     WHERE v.id = ANY($1::int[])`,
+     WHERE v.id = ANY($1::int[]) AND p.is_active`,
     [[...quantities.keys()]],
   );
   const byVariant = new Map(rows.map((row) => [row.variant_id as number, row]));
@@ -89,7 +89,7 @@ export async function previewCart(q: Queryable, lines: CartLine[]): Promise<Cart
 export async function addToCart(q: Queryable, userId: number, variantId: number, quantity: number): Promise<boolean> {
   const rows = await q.query(
     `INSERT INTO cart_items (user_id, variant_id, quantity)
-     SELECT $1::int, v.id, $3::int FROM product_variants v WHERE v.id = $2::int
+     SELECT $1::int, v.id, $3::int FROM product_variants v JOIN products p ON p.id = v.product_id WHERE v.id = $2::int AND p.is_active
      ON CONFLICT (user_id, variant_id)
        DO UPDATE SET quantity = LEAST(${MAX_QUANTITY}, cart_items.quantity + EXCLUDED.quantity)
      RETURNING variant_id`,
