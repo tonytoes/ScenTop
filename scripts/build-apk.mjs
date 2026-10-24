@@ -1,10 +1,11 @@
 // Builds a debug APK you can install on a phone: android/app/build/outputs/apk/debug/app-debug.apk
 // Run it with `npm run android:apk` (this also rebuilds the website and syncs it into the Android project).
+// `--copy-to <file>` also copies the finished APK there (npm run android:demo uses it for ScenTop-demo.apk).
 //
 // Android builds need a JDK (17 to 21) and the Android SDK. This script looks for them in the usual
 // places so you do not have to set environment variables by hand.
 import { spawnSync } from 'node:child_process';
-import { existsSync, readdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, readdirSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 
@@ -70,4 +71,11 @@ const result = spawnSync(command, args, {
 });
 
 if (result.status !== 0) process.exit(result.status ?? 1);
-console.log('\nDone: android/app/build/outputs/apk/debug/app-debug.apk');
+const apk = 'android/app/build/outputs/apk/debug/app-debug.apk';
+const copyTo = process.argv.includes('--copy-to') ? process.argv[process.argv.indexOf('--copy-to') + 1] : undefined;
+if (copyTo) {
+  copyFileSync(apk, copyTo);
+  console.log(`\nDone: ${copyTo} (also in ${apk})`);
+} else {
+  console.log(`\nDone: ${apk}`);
+}

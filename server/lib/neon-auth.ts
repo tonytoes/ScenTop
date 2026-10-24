@@ -16,6 +16,14 @@ export interface NeonGateway {
   verifyOtp(email: string, otp: string): Promise<NeonIdentity>;
 }
 
+// Error codes returned by Neon Auth's email OTP endpoints, turned into messages a customer can act on.
+const OTP_ERRORS: Record<string, string> = {
+  INVALID_OTP: 'That code is incorrect. Check the latest email and try again.',
+  OTP_EXPIRED: 'That code has expired. Request a new one.',
+  TOO_MANY_ATTEMPTS: 'Too many wrong codes. Request a new one.',
+  INVALID_EMAIL: 'Enter a valid email address.',
+};
+
 export function createNeonVerifier(base: string, key?: JWTVerifyGetKey) {
   const origin = new URL(base).origin;
   const jwks = key ?? createRemoteJWKSet(new URL(`${base}/.well-known/jwks.json`));
@@ -54,7 +62,8 @@ export function createNeonGateway(config: Config): NeonGateway {
     }
     if (!response.ok) {
       if (response.status === 429) throw new HttpError(429, 'Too many attempts. Wait before requesting another code.', 'rate_limited');
-      throw new HttpError(400, 'The code could not be sent or verified. Check the code or request a new one.', 'otp_failed');
+      const code = await response.json().then((body: { code?: unknown }) => body?.code, () => undefined);
+      throw new HttpError(400, typeof code === 'string' && OTP_ERRORS[code] || 'The code could not be sent or verified. Check the code or request a new one.', 'otp_failed');
     }
     return response.json();
   }

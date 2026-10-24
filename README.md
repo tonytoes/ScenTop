@@ -69,6 +69,14 @@ Required settings in production: `DATABASE_URL`, `JWT_SECRET` (32+ random charac
 3. Icons and splash screens come from `resources/`. Regenerate them with `npm run assets:android`.
 4. For Google Play you need a signed release build, a privacy policy link (the site has one at `/privacy`) and the in-app account deletion (already in Profile).
 
+### Offline demo APK
+
+`npm run android:demo` builds `android/app/build/outputs/apk/debug/app-debug.apk`, a demo app that needs no server and no internet.
+Every API call is answered on the phone (`src/app/demo/demo-backend.ts`) from a built-in catalogue, and accounts, carts,
+wishlists, orders and reviews are saved on the phone. Email-code and Google sign-in are hidden. Log in with
+`demo@scentop.app` / `demo12345`, or create a new account. After editing `server/db/seed-data.ts`, run `npm run demo:data` to refresh the catalogue.
+Try it in a browser first with `npx ng serve --configuration demo`.
+
 ## How the code is organised
 
 ```

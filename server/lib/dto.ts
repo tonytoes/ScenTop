@@ -10,6 +10,7 @@ export interface UserDto {
   phone: string;
   address: string;
   photoUrl: string | null;
+  role: 'customer' | 'admin';
   hasPassword: boolean;
 }
 
@@ -21,6 +22,7 @@ export const toUser = (row: Row): UserDto => ({
   phone: row.phone,
   address: row.address,
   photoUrl: row.photo_url,
+  role: row.role,
   hasPassword: Boolean(row.password_hash),
 });
 

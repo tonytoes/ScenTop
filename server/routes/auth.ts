@@ -56,7 +56,11 @@ export function authRouter(ctx: AppContext): Router {
   // Compared against when the e-mail is unknown, so a wrong e-mail and a wrong password take equally long
   const dummyHash = bcrypt.hashSync('not-a-real-password', ctx.config.bcryptRounds);
 
-  const session = (row: Parameters<typeof toUser>[0]) => ({ token: signToken(row.id, ctx.config.jwtSecret), user: toUser(row) });
+  const session = (row: Parameters<typeof toUser>[0]) => {
+    // Covers every way in: password, email code and Google
+    if (row.is_disabled) throw new HttpError(403, 'This account has been disabled. Please contact the shop.', 'account_disabled');
+    return { token: signToken(row.id, ctx.config.jwtSecret), user: toUser(row) };
+  };
 
   router.post('/neon/exchange', async (req, res) => {
     const { neonToken } = parse(z.object({ neonToken: z.string().min(1).max(20000) }), req.body);

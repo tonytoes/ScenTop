@@ -31,6 +31,14 @@ describe('managed OTP HTTP contract', () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 429 })));
     await expect(createNeonGateway(config).sendOtp('a@example.test')).rejects.toMatchObject({ status: 429 });
   });
+  it('explains provider OTP errors', async () => {
+    for (const [code, status, message] of [['INVALID_OTP', 400, /incorrect/], ['OTP_EXPIRED', 400, /expired/], ['TOO_MANY_ATTEMPTS', 403, /Too many/], ['SOMETHING_ELSE', 400, /could not be sent/]] as const) {
+      vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ code }), { status })));
+      await expect(createNeonGateway(config).verifyOtp('a@example.test', '012345')).rejects.toMatchObject({ status: 400, code: 'otp_failed', message: expect.stringMatching(message) });
+    }
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('not json', { status: 500 })));
+    await expect(createNeonGateway(config).sendOtp('a@example.test')).rejects.toMatchObject({ code: 'otp_failed' });
+  });
   it('leaves passwordless routes disabled without configuration', async () => {
     const disabled = createNeonGateway(loadConfig({ NODE_ENV: 'test' }));
     await expect(disabled.sendOtp('a@example.test')).rejects.toMatchObject({ code: 'auth_not_configured' });

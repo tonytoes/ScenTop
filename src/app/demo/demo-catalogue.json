@@ -1,0 +1,506 @@
+[
+  {
+    "id": 1,
+    "slug": "ambre-sucre",
+    "name": "Ambre Sucré",
+    "category": "Gourmand",
+    "audience": "unisex",
+    "description": "Warm amber wrapped in caramelized vanilla and a soft trail of tonka bean.",
+    "scentNotes": [
+      "Amber",
+      "Vanilla",
+      "Tonka bean"
+    ],
+    "imageUrl": "assets/products/ambre-sucre.webp",
+    "isBestSeller": true,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 1,
+        "sizeMl": 50,
+        "priceCents": 185000
+      },
+      {
+        "id": 2,
+        "sizeMl": 100,
+        "priceCents": 325000
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "slug": "deep-rouge",
+    "name": "Deep Rouge",
+    "category": "Signature",
+    "audience": "unisex",
+    "description": "Dark rose and black cherry over a smoky oud base. Bold and unforgettable.",
+    "scentNotes": [
+      "Rose",
+      "Black cherry",
+      "Oud"
+    ],
+    "imageUrl": "assets/products/deep-rouge.webp",
+    "isBestSeller": true,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 3,
+        "sizeMl": 50,
+        "priceCents": 215000
+      },
+      {
+        "id": 4,
+        "sizeMl": 100,
+        "priceCents": 375000
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "slug": "lilys-lush",
+    "name": "Lily's Lush",
+    "category": "Floral",
+    "audience": "women",
+    "description": "A bright bouquet of white lily, peony and dewy green stems.",
+    "scentNotes": [
+      "White lily",
+      "Peony",
+      "Green stems"
+    ],
+    "imageUrl": "assets/products/lilys-lush.webp",
+    "isBestSeller": true,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 5,
+        "sizeMl": 50,
+        "priceCents": 145000
+      },
+      {
+        "id": 6,
+        "sizeMl": 100,
+        "priceCents": 255000
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "slug": "baybayon",
+    "name": "Baybayon",
+    "category": "Refreshing",
+    "audience": "men",
+    "description": "Sea salt, coconut water and calamansi inspired by a morning on the shore.",
+    "scentNotes": [
+      "Sea salt",
+      "Coconut water",
+      "Calamansi"
+    ],
+    "imageUrl": "assets/products/baybayon.webp",
+    "isBestSeller": true,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 7,
+        "sizeMl": 50,
+        "priceCents": 125000
+      },
+      {
+        "id": 8,
+        "sizeMl": 100,
+        "priceCents": 220000
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "slug": "rocio-dorado",
+    "name": "Rocío Dorado",
+    "category": "Floral",
+    "audience": "women",
+    "description": "Golden orange blossom and jasmine kissed with morning dew.",
+    "scentNotes": [
+      "Orange blossom",
+      "Jasmine",
+      "Dew accord"
+    ],
+    "imageUrl": "assets/products/rocio-dorado.webp",
+    "isBestSeller": true,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 9,
+        "sizeMl": 50,
+        "priceCents": 165000
+      },
+      {
+        "id": 10,
+        "sizeMl": 100,
+        "priceCents": 290000
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "slug": "hifumi-atelier",
+    "name": "Hifumi Atelier",
+    "category": "Signature",
+    "audience": "women",
+    "description": "Hinoki wood, yuzu and white tea. Quiet, clean and refined.",
+    "scentNotes": [
+      "Hinoki wood",
+      "Yuzu",
+      "White tea"
+    ],
+    "imageUrl": "assets/products/hifumi-atelier.webp",
+    "isBestSeller": true,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 11,
+        "sizeMl": 50,
+        "priceCents": 245000
+      },
+      {
+        "id": 12,
+        "sizeMl": 100,
+        "priceCents": 430000
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "slug": "nori-blanc",
+    "name": "Nori Blanc",
+    "category": "Refreshing",
+    "audience": "women",
+    "description": "Crisp marine notes, white musk and a hint of sea breeze.",
+    "scentNotes": [
+      "Marine notes",
+      "White musk",
+      "Sea breeze"
+    ],
+    "imageUrl": "assets/products/nori-blanc.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 13,
+        "sizeMl": 50,
+        "priceCents": 135000
+      },
+      {
+        "id": 14,
+        "sizeMl": 100,
+        "priceCents": 235000
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "slug": "athenas-wreath",
+    "name": "Athena's Wreath",
+    "category": "Verdant",
+    "audience": "unisex",
+    "description": "Laurel leaves, olive wood and fig for a calm, timeless green scent.",
+    "scentNotes": [
+      "Laurel",
+      "Olive wood",
+      "Fig"
+    ],
+    "imageUrl": "assets/products/athenas-wreath.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 15,
+        "sizeMl": 50,
+        "priceCents": 175000
+      },
+      {
+        "id": 16,
+        "sizeMl": 100,
+        "priceCents": 305000
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "slug": "vera-xong",
+    "name": "Vera Xong",
+    "category": "Gourmand",
+    "audience": "unisex",
+    "description": "Roasted coffee, cocoa and brown sugar finished with sandalwood.",
+    "scentNotes": [
+      "Coffee",
+      "Cocoa",
+      "Sandalwood"
+    ],
+    "imageUrl": "assets/products/vera-xong.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 17,
+        "sizeMl": 50,
+        "priceCents": 155000
+      },
+      {
+        "id": 18,
+        "sizeMl": 100,
+        "priceCents": 270000
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "slug": "sephyr",
+    "name": "Sephyr",
+    "category": "Refreshing",
+    "audience": "men",
+    "description": "Light citrus and airy mint that feels like a cool afternoon wind.",
+    "scentNotes": [
+      "Citrus",
+      "Mint",
+      "Cedar"
+    ],
+    "imageUrl": "assets/products/sephyr.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 19,
+        "sizeMl": 50,
+        "priceCents": 95000
+      },
+      {
+        "id": 20,
+        "sizeMl": 100,
+        "priceCents": 165000
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "slug": "clio",
+    "name": "Clio",
+    "category": "Floral",
+    "audience": "men",
+    "description": "Powdery iris and violet with a soft musky finish.",
+    "scentNotes": [
+      "Iris",
+      "Violet",
+      "Musk"
+    ],
+    "imageUrl": "assets/products/clio.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 21,
+        "sizeMl": 50,
+        "priceCents": 115000
+      },
+      {
+        "id": 22,
+        "sizeMl": 100,
+        "priceCents": 200000
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "slug": "fume-shroom",
+    "name": "Fume Shroom",
+    "category": "Verdant",
+    "audience": "men",
+    "description": "Earthy moss, vetiver and forest floor after the rain.",
+    "scentNotes": [
+      "Moss",
+      "Vetiver",
+      "Petrichor"
+    ],
+    "imageUrl": "assets/products/fume-shroom.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 23,
+        "sizeMl": 50,
+        "priceCents": 145000
+      },
+      {
+        "id": 24,
+        "sizeMl": 100,
+        "priceCents": 255000
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "slug": "alriune",
+    "name": "Alriune",
+    "category": "Verdant",
+    "audience": "unisex",
+    "description": "Green herbs, crushed leaves and a mysterious root accord.",
+    "scentNotes": [
+      "Green herbs",
+      "Crushed leaves",
+      "Orris root"
+    ],
+    "imageUrl": "assets/products/alriune.webp",
+    "isBestSeller": false,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 25,
+        "sizeMl": 50,
+        "priceCents": 160000
+      },
+      {
+        "id": 26,
+        "sizeMl": 100,
+        "priceCents": 280000
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "slug": "artisan",
+    "name": "Artisan",
+    "category": "Signature",
+    "audience": "men",
+    "description": "Leather, tobacco leaf and cedar. Crafted for evenings out.",
+    "scentNotes": [
+      "Leather",
+      "Tobacco leaf",
+      "Cedar"
+    ],
+    "imageUrl": "assets/products/artisan.webp",
+    "isBestSeller": false,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 27,
+        "sizeMl": 50,
+        "priceCents": 199000
+      },
+      {
+        "id": 28,
+        "sizeMl": 100,
+        "priceCents": 350000
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "slug": "colognia-dreamery",
+    "name": "Colognia Dreamery",
+    "category": "Refreshing",
+    "audience": "unisex",
+    "description": "A classic cologne of bergamot, neroli and lavender.",
+    "scentNotes": [
+      "Bergamot",
+      "Neroli",
+      "Lavender"
+    ],
+    "imageUrl": "assets/products/colognia-dreamery.webp",
+    "isBestSeller": false,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 29,
+        "sizeMl": 50,
+        "priceCents": 89000
+      },
+      {
+        "id": 30,
+        "sizeMl": 100,
+        "priceCents": 155000
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "slug": "l-emetrius",
+    "name": "L'Emetrius",
+    "category": "Signature",
+    "audience": "unisex",
+    "description": "Saffron, amberwood and pink pepper for a confident signature.",
+    "scentNotes": [
+      "Saffron",
+      "Amberwood",
+      "Pink pepper"
+    ],
+    "imageUrl": "assets/products/l-emetrius.webp",
+    "isBestSeller": false,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 31,
+        "sizeMl": 50,
+        "priceCents": 225000
+      },
+      {
+        "id": 32,
+        "sizeMl": 100,
+        "priceCents": 395000
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "slug": "melissa",
+    "name": "Melissa",
+    "category": "Refreshing",
+    "audience": "women",
+    "description": "Lemon balm, honey and green tea. Light enough for every day.",
+    "scentNotes": [
+      "Lemon balm",
+      "Honey",
+      "Green tea"
+    ],
+    "imageUrl": "assets/products/melissa.webp",
+    "isBestSeller": false,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 33,
+        "sizeMl": 50,
+        "priceCents": 79000
+      },
+      {
+        "id": 34,
+        "sizeMl": 100,
+        "priceCents": 140000
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "slug": "ylang-ylang",
+    "name": "Ylang Ylang Fragrance",
+    "category": "Floral",
+    "audience": "women",
+    "description": "Creamy ylang-ylang and sampaguita, a tribute to Philippine flowers.",
+    "scentNotes": [
+      "Ylang-ylang",
+      "Sampaguita",
+      "Vanilla"
+    ],
+    "imageUrl": "assets/products/ylang-ylang.webp",
+    "isBestSeller": false,
+    "isNewArrival": false,
+    "variants": [
+      {
+        "id": 35,
+        "sizeMl": 50,
+        "priceCents": 105000
+      },
+      {
+        "id": 36,
+        "sizeMl": 100,
+        "priceCents": 185000
+      }
+    ]
+  }
+]

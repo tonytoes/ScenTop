@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import type { AppContext } from './context';
 import { apiNotFound, errorHandler } from './middleware/errors';
+import { adminRouter } from './routes/admin';
 import { authRouter } from './routes/auth';
 import { cartRouter } from './routes/cart';
 import { contactRouter } from './routes/contact';
@@ -63,6 +64,8 @@ export function createApp(ctx: AppContext): Express {
   const api = express.Router();
   const deleteLimiter = limiter(10, 15 * 60_000, ctx);
   api.use(cors({ origin: [...MOBILE_APP_ORIGINS, ...config.corsOrigins] }));
+  // Admins can upload product pictures, so their requests may be larger
+  api.use('/admin', express.json({ limit: '2mb' }));
   api.use(express.json({ limit: '200kb' }));
   api.use(limiter(300, 60_000, ctx));
   api.use(['/auth/login', '/auth/signup', '/auth/neon', '/auth/otp', '/auth/delete-code'], limiter(20, 15 * 60_000, ctx));
@@ -80,9 +83,14 @@ export function createApp(ctx: AppContext): Express {
   api.use(wishlistRouter(ctx));
   api.use(ordersRouter(ctx));
   api.use(contactRouter(ctx));
+  api.use('/admin', adminRouter(ctx));
   api.use(apiNotFound);
   app.use('/api', api);
 
+  // The admin app is its own build (npm run build:admin), served under /admin
+  const admin = express.Router();
+  serveWebApp(admin, config.adminStaticDir, config.env !== 'development');
+  app.use('/admin', admin);
   serveWebApp(app, config.staticDir, config.env !== 'development');
 
   app.use(errorHandler);
@@ -90,7 +98,7 @@ export function createApp(ctx: AppContext): Express {
 }
 
 /** Serves the built Angular app, falling back to index.html so that deep links like /product/deep-rouge work. */
-function serveWebApp(app: Express, staticDir: string, cache: boolean) {
+function serveWebApp(app: express.Router, staticDir: string, cache: boolean) {
   const indexFile = path.join(staticDir, 'index.html');
 
   if (!fs.existsSync(indexFile)) {

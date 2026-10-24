@@ -6,6 +6,7 @@ import { routes } from './app.routes';
 import { AuthService } from './core/auth.service';
 import { authInterceptor, errorInterceptor } from './core/http.interceptors';
 import { NativeService } from './core/native.service';
+import { demoInterceptor } from './demo/demo.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     // "md" gives the same Material look on every phone, so the design does not change between iOS and Android
     provideIonicAngular({ mode: 'md' }),
-    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor, demoInterceptor])),
     provideRouter(routes, withPreloading(PreloadAllModules), withComponentInputBinding()),
     // Wait for a saved login to be restored before the first page appears
     provideAppInitializer(() => inject(AuthService).ready),
