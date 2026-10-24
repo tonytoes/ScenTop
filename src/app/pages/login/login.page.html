@@ -31,6 +31,8 @@
         </button>
       </form>
 
+      <app-passwordless-actions [redirect]="redirect" />
+
       <p class="switch">New to ScenTop? <a routerLink="/signup" [queryParams]="signupQuery">Create an account</a></p>
       <a class="guest" [routerLink]="'/home'">Continue as guest</a>
     </section>

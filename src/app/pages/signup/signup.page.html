@@ -38,6 +38,8 @@
         <p class="terms">By creating an account you agree to our <a routerLink="/terms">terms</a> and <a routerLink="/privacy">privacy policy</a>.</p>
       </form>
 
+      <app-passwordless-actions [redirect]="redirect" />
+
       <p class="switch">Already have an account? <a routerLink="/login" [queryParams]="loginQuery">Log in</a></p>
     </section>
   </main>

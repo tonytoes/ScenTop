@@ -60,6 +60,7 @@
         </button>
       </form>
 
+      @if (auth.user()?.hasPassword !== false) {
       <form class="card card--pad stack" style="--gap: 6px" [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
         <h2>Change password</h2>
         <app-text-field label="Current password" type="password" autocomplete="current-password" [control]="passwordForm.controls.currentPassword" />
@@ -71,6 +72,9 @@
         <button type="submit" class="btn btn--dark" [attr.aria-busy]="savingPassword()">Update password</button>
       </form>
 
+      } @else {
+        <div class="card card--pad"><h2>Passwordless account</h2><p>Use Google or an email code to sign in. There is no ScenTop password to change.</p></div>
+      }
       <div class="card card--pad danger">
         <h2>Delete account</h2>
         <p class="muted">Permanently remove your profile, cart, wishlist and reviews. Past orders are kept without your personal details.</p>

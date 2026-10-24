@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 
-const LOGIN_REQUIRED = ['/checkout', '/orders', '/profile', '/order-success'];
+const LOGIN_REQUIRED = ['/checkout', '/orders', '/profile', '/order-success', '/complete-profile'];
 
 /** True for pages that only make sense when logged in. */
 export const requiresLogin = (url: string) => LOGIN_REQUIRED.some((prefix) => url === prefix || url.startsWith(`${prefix}/`) || url.startsWith(`${prefix}?`));

@@ -2,6 +2,8 @@
 // The app is not served by your server, so it needs the full address of the deployed API.
 // Replace this with your own URL, e.g. https://scentop.onrender.com/api
 export const environment = {
+  /** Public Neon Auth URL. Empty keeps the new buttons hidden. */
+  neonAuthUrl: 'https://ep-curly-moon-b46gdsbd.neonauth.c-6.us-east-2.aws.neon.tech/neondb/auth',
   production: true,
   /** Public address of the website, used in shared links. Empty means "the address the site is running on". */
   siteUrl: 'https://scentop.example.com',

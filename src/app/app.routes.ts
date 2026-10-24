@@ -16,6 +16,11 @@ export const routes: Routes = [
   { path: 'orders', title: 'My orders | ScenTop', canActivate: [authGuard], loadComponent: () => import('./pages/orders/orders.page').then((m) => m.OrdersPage) },
   { path: 'orders/:id', title: 'Order | ScenTop', canActivate: [authGuard], loadComponent: () => import('./pages/order-detail/order-detail.page').then((m) => m.OrderDetailPage) },
 
+  // Passwordless callback must remain accessible before a ScenTop session exists.
+  { path: 'auth/callback', loadComponent: () => import('./pages/auth-callback/auth-callback.page').then(m => m.AuthCallbackPage) },
+  { path: 'email-otp', canActivate: [guestGuard], loadComponent: () => import('./pages/email-otp/email-otp.page').then(m => m.EmailOtpPage) },
+  { path: 'complete-profile', canActivate: [authGuard], loadComponent: () => import('./pages/complete-profile/complete-profile.page').then(m => m.CompleteProfilePage) },
+
   // Account
   { path: 'login', title: 'Log in | ScenTop', canActivate: [guestGuard], loadComponent: () => import('./pages/login/login.page').then((m) => m.LoginPage) },
   { path: 'signup', title: 'Create account | ScenTop', canActivate: [guestGuard], loadComponent: () => import('./pages/signup/signup.page').then((m) => m.SignupPage) },

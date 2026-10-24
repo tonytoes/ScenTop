@@ -5,11 +5,13 @@ import { IonContent } from '@ionic/angular';
 import { errorMessage } from '../../core/api-error';
 import { AuthService } from '../../core/auth.service';
 import { applyServerErrors } from '../../core/forms';
+import { PasswordlessActionsComponent } from '../../shared/passwordless-actions/passwordless-actions.component';
+import { safeAuthRedirect } from '../../core/auth-navigation';
 import { TextFieldComponent } from '../../shared/text-field/text-field.component';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, IonContent, TextFieldComponent],
+  imports: [ReactiveFormsModule, RouterLink, IonContent, TextFieldComponent, PasswordlessActionsComponent],
   templateUrl: './login.page.html',
   styleUrl: '../signup/auth.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,7 +32,7 @@ export class LoginPage {
   /** Where to go after logging in. Only addresses inside the app are allowed. */
   protected get redirect(): string {
     const target = this.route.snapshot.queryParamMap.get('redirect') ?? '';
-    return target.startsWith('/') && !target.startsWith('//') ? target : '/home';
+    return safeAuthRedirect(target);
   }
 
   protected get signupQuery() {

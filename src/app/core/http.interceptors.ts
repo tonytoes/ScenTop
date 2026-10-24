@@ -11,7 +11,7 @@ import { TokenStore } from './token-store';
 /** Sends the login token with every call to our own API. */
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
   const token = inject(TokenStore).token();
-  if (!token || !request.url.startsWith(environment.apiUrl)) return next(request);
+  if (!token || !(request.url === environment.apiUrl || request.url.startsWith(`${environment.apiUrl}/`))) return next(request);
   return next(request.clone({ setHeaders: { Authorization: `Bearer ${token}` } }));
 };
 

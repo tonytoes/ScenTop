@@ -7,6 +7,8 @@ import { conflict, HttpError } from '../lib/errors';
 import { checkPassword, hashPassword, signToken } from '../lib/security';
 import { parse, schemas } from '../lib/validate';
 import { currentUser, requireAuth } from '../middleware/auth';
+import { createNeonGateway } from '../lib/neon-auth';
+import { readLinkTicket, resolveNeonAccount } from '../services/neon-account';
 
 const isUniqueViolation = (error: unknown) => (error as { code?: string })?.code === '23505';
 
@@ -45,15 +47,52 @@ const passwordChangeSchema = z.object({
   newPassword: schemas.password,
 });
 
-const deleteSchema = z.object({ password: schemas.required('Password') });
+const deleteSchema = z.object({ password: schemas.required('Password').optional(), otp: z.string().trim().regex(/^[0-9]{4,10}$/).optional() });
 
 export function authRouter(ctx: AppContext): Router {
   const router = Router();
   const auth = requireAuth(ctx);
+  const neon = ctx.neon ?? createNeonGateway(ctx.config);
   // Compared against when the e-mail is unknown, so a wrong e-mail and a wrong password take equally long
   const dummyHash = bcrypt.hashSync('not-a-real-password', ctx.config.bcryptRounds);
 
   const session = (row: Parameters<typeof toUser>[0]) => ({ token: signToken(row.id, ctx.config.jwtSecret), user: toUser(row) });
+
+  router.post('/neon/exchange', async (req, res) => {
+    const { neonToken } = parse(z.object({ neonToken: z.string().min(1).max(20000) }), req.body);
+    const user = await resolveNeonAccount(ctx, await neon.verify(neonToken));
+    res.json(session(user));
+  });
+
+  router.post('/neon/link', async (req, res) => {
+    const input = parse(z.object({ linkTicket: z.string().min(1).max(20000), password: schemas.required('Password').max(72) }), req.body);
+    const identity = readLinkTicket(input.linkTicket, ctx.config.jwtSecret);
+    if (!ctx.config.neonAuthBaseUrl || identity.issuer !== new URL(ctx.config.neonAuthBaseUrl).origin) {
+      throw new HttpError(400, 'Authentication configuration changed. Please start again.', 'invalid_link');
+    }
+    res.json(session(await resolveNeonAccount(ctx, identity, input.password)));
+  });
+
+  router.post('/otp/send', async (req, res) => {
+    const { email } = parse(z.object({ email: schemas.email }), req.body);
+    await neon.sendOtp(email.toLowerCase());
+    res.json({ message: 'If email sign-in is available, a code has been sent. Check your inbox and spam folder.' });
+  });
+
+  router.post('/otp/verify', async (req, res) => {
+    const input = parse(z.object({ email: schemas.email, otp: z.string().trim().regex(/^[0-9]{4,10}$/) }), req.body);
+    const identity = await neon.verifyOtp(input.email.toLowerCase(), input.otp);
+    res.json(session(await resolveNeonAccount(ctx, identity)));
+  });
+
+  // The email is taken from the authenticated account, never from the request.
+  router.post('/delete-code', auth, async (req, res) => {
+    const user = currentUser(req);
+    const mappings = await ctx.db.query('SELECT 1 FROM user_auth_identities WHERE user_id = $1', [user.id]);
+    if (!mappings.length || user.password_hash) throw new HttpError(400, 'Use your ScenTop password to delete this account.', 'password_required');
+    await neon.sendOtp(user.email);
+    res.status(204).end();
+  });
 
   router.post('/signup', async (req, res) => {
     const input = parse(signupSchema, req.body);
@@ -78,7 +117,6 @@ export function authRouter(ctx: AppContext): Router {
 
     const passwordOk = await checkPassword(input.password, user?.password_hash ?? dummyHash);
     if (!user || !passwordOk) throw new HttpError(401, 'Incorrect e-mail or password.', 'invalid_credentials');
-    if (user.is_disabled) throw new HttpError(403, 'This account has been disabled. Please contact the shop.', 'account_disabled');
 
     res.json(session(user));
   });
@@ -110,7 +148,7 @@ export function authRouter(ctx: AppContext): Router {
     const input = parse(passwordChangeSchema, req.body);
     const current = currentUser(req);
 
-    if (!(await checkPassword(input.currentPassword, current.password_hash))) {
+    if (!current.password_hash || !(await checkPassword(input.currentPassword, current.password_hash))) {
       throw new HttpError(400, 'Your current password is incorrect.', 'validation', {
         currentPassword: 'Your current password is incorrect.',
       });
@@ -125,8 +163,15 @@ export function authRouter(ctx: AppContext): Router {
     const input = parse(deleteSchema, req.body);
     const current = currentUser(req);
 
-    if (!(await checkPassword(input.password, current.password_hash))) {
-      throw new HttpError(400, 'That password is incorrect.', 'validation', { password: 'That password is incorrect.' });
+    if (current.password_hash) {
+      if (!input.password || !(await checkPassword(input.password, current.password_hash))) {
+        throw new HttpError(400, 'That password is incorrect.', 'validation', { password: 'That password is incorrect.' });
+      }
+    } else {
+      if (!input.otp) throw new HttpError(400, 'Enter a new email code to confirm deletion.', 'otp_required');
+      const identity = await neon.verifyOtp(current.email, input.otp);
+      const mappings = await ctx.db.query('SELECT 1 FROM user_auth_identities WHERE user_id = $1 AND issuer = $2 AND subject = $3', [current.id, identity.issuer, identity.subject]);
+      if (!mappings.length) throw new HttpError(403, 'The code does not belong to this account.', 'identity_mismatch');
     }
 
     await ctx.db.tx(async (q) => {

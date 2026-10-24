@@ -14,6 +14,8 @@ export interface User {
   phone: string;
   address: string;
   photoUrl: string | null;
+  /** Optional for previously cached profiles; server always returns it. */
+  hasPassword?: boolean;
 }
 
 export interface Variant {

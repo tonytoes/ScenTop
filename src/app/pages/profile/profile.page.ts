@@ -134,6 +134,10 @@ export class ProfilePage {
   }
 
   protected async confirmDelete() {
+    if (this.auth.user()?.hasPassword === false) {
+      await this.confirmPasswordlessDelete();
+      return;
+    }
     const alert = await this.alerts.create({
       header: 'Delete your account?',
       message: 'This permanently deletes your profile, cart, wishlist and reviews. Enter your password to confirm.',
@@ -156,4 +160,29 @@ export class ProfilePage {
       await this.toast.show(errorMessage(error));
     }
   }
+  private async confirmPasswordlessDelete() {
+    const confirm = await this.alerts.create({
+      header: 'Delete your account?',
+      message: 'This removes your ScenTop profile, cart, wishlist and reviews. We will email a code to confirm. Your sign-in identity is blocked from recreating this account; contact support for identity-data removal.',
+      buttons: [{ text: 'Cancel', role: 'cancel' }, { text: 'Send confirmation code', role: 'confirm' }],
+    });
+    await confirm.present();
+    if ((await confirm.onDidDismiss()).role !== 'confirm') return;
+    try {
+      await this.auth.sendDeleteCode();
+      const prompt = await this.alerts.create({
+        header: 'Enter the email code',
+        message: 'Use the code just sent to your account email to permanently delete your ScenTop account.',
+        inputs: [{ name: 'otp', type: 'text', placeholder: 'Email code', attributes: { inputmode: 'numeric', autocomplete: 'one-time-code' } }],
+        buttons: [{ text: 'Cancel', role: 'cancel' }, { text: 'Delete forever', role: 'confirm' }],
+      });
+      await prompt.present();
+      const result = await prompt.onDidDismiss<{ values?: { otp?: string } }>();
+      if (result.role !== 'confirm') return;
+      await this.auth.deletePasswordlessAccount(result.data?.values?.otp ?? '');
+      await this.router.navigate(['/home'], { replaceUrl: true });
+      await this.toast.show('Your ScenTop account was deleted.');
+    } catch (error) { await this.toast.show(errorMessage(error)); }
+  }
+
 }
