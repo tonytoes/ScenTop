@@ -28,7 +28,7 @@ export interface Config {
   bootstrapAdmin: { email: string; password: string } | null;
 }
 
-// Development only: the admin you can log in with straight away. Production needs ADMIN_EMAIL and ADMIN_PASSWORD.
+// Local development only (no DATABASE_URL): the admin you can log in with straight away. Anywhere else it needs ADMIN_EMAIL and ADMIN_PASSWORD.
 const DEV_ADMIN = { email: 'admin@scentop.local', password: 'admin12345' };
 
 const DEV_SECRET = 'dev-only-secret-do-not-use-in-production';
@@ -91,5 +91,6 @@ function bootstrapAdmin(env: NodeJS.ProcessEnv, mode: Config['env']): Config['bo
     if (password.length < 8) throw new Error('ADMIN_PASSWORD must be at least 8 characters.');
     return { email, password };
   }
-  return mode === 'development' ? DEV_ADMIN : null;
+  // The well-known demo admin is only for the throw-away local database, never for a real (online) one
+  return mode === 'development' && !env.DATABASE_URL?.trim() ? DEV_ADMIN : null;
 }
