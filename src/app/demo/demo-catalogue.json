@@ -502,5 +502,341 @@
         "priceCents": 185000
       }
     ]
+  },
+  {
+    "id": 19,
+    "slug": "blutenpracht",
+    "name": "Blütenpracht",
+    "category": "Floral",
+    "audience": "women",
+    "description": "Orange blossom and lavender on a warm vanilla base. Bright, golden and confident.",
+    "scentNotes": [
+      "Orange blossom",
+      "Lavender",
+      "Vanilla"
+    ],
+    "imageUrl": "assets/products/blutenpracht.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 37,
+        "sizeMl": 50,
+        "priceCents": 205000
+      },
+      {
+        "id": 38,
+        "sizeMl": 100,
+        "priceCents": 360000
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "slug": "die-rosen",
+    "name": "Die Rosen",
+    "category": "Floral",
+    "audience": "women",
+    "description": "A soft bouquet of Damask rose and lychee, finished with clean white musk.",
+    "scentNotes": [
+      "Damask rose",
+      "Lychee",
+      "White musk"
+    ],
+    "imageUrl": "assets/products/die-rosen.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 39,
+        "sizeMl": 50,
+        "priceCents": 155000
+      },
+      {
+        "id": 40,
+        "sizeMl": 100,
+        "priceCents": 270000
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "slug": "fleur-blanche",
+    "name": "Fleur Blanche",
+    "category": "Floral",
+    "audience": "women",
+    "description": "Creamy gardenia and tuberose, polished and elegant from morning to night.",
+    "scentNotes": [
+      "Gardenia",
+      "Tuberose",
+      "White musk"
+    ],
+    "imageUrl": "assets/products/fleur-blanche.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 41,
+        "sizeMl": 50,
+        "priceCents": 175000
+      },
+      {
+        "id": 42,
+        "sizeMl": 100,
+        "priceCents": 305000
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "slug": "floris-somnium",
+    "name": "Floris Somnium",
+    "category": "Verdant",
+    "audience": "unisex",
+    "description": "Green fig leaf and vetiver over smooth cedarwood. A calm garden after rain.",
+    "scentNotes": [
+      "Fig leaf",
+      "Vetiver",
+      "Cedarwood"
+    ],
+    "imageUrl": "assets/products/floris-somnium.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 43,
+        "sizeMl": 50,
+        "priceCents": 185000
+      },
+      {
+        "id": 44,
+        "sizeMl": 100,
+        "priceCents": 325000
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "slug": "fresh-breeze",
+    "name": "Fresh Breeze",
+    "category": "Refreshing",
+    "audience": "women",
+    "description": "Lily of the valley, crisp pear and a breath of sea air. Light and easy.",
+    "scentNotes": [
+      "Lily of the valley",
+      "Pear",
+      "Sea air"
+    ],
+    "imageUrl": "assets/products/fresh-breeze.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 45,
+        "sizeMl": 50,
+        "priceCents": 115000
+      },
+      {
+        "id": 46,
+        "sizeMl": 100,
+        "priceCents": 200000
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "slug": "fugizi",
+    "name": "Fugizi",
+    "category": "Signature",
+    "audience": "unisex",
+    "description": "Cherry blossom, green tea and rice musk inspired by a spring morning in Japan.",
+    "scentNotes": [
+      "Cherry blossom",
+      "Green tea",
+      "Rice musk"
+    ],
+    "imageUrl": "assets/products/fugizi.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 47,
+        "sizeMl": 50,
+        "priceCents": 235000
+      },
+      {
+        "id": 48,
+        "sizeMl": 100,
+        "priceCents": 410000
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "slug": "harana",
+    "name": "Harana",
+    "category": "Gourmand",
+    "audience": "women",
+    "description": "Sampaguita and golden honey over sandalwood, sweet like a serenade.",
+    "scentNotes": [
+      "Sampaguita",
+      "Honey",
+      "Sandalwood"
+    ],
+    "imageUrl": "assets/products/harana.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 49,
+        "sizeMl": 50,
+        "priceCents": 165000
+      },
+      {
+        "id": 50,
+        "sizeMl": 100,
+        "priceCents": 290000
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "slug": "harene-de-lumiere",
+    "name": "Harene de Lumière",
+    "category": "Signature",
+    "audience": "women",
+    "description": "Peony and pink pepper glowing over warm amber. Radiant and refined.",
+    "scentNotes": [
+      "Peony",
+      "Pink pepper",
+      "Amber"
+    ],
+    "imageUrl": "assets/products/harene-de-lumiere.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 51,
+        "sizeMl": 50,
+        "priceCents": 225000
+      },
+      {
+        "id": 52,
+        "sizeMl": 100,
+        "priceCents": 395000
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "slug": "haresse-de-senora",
+    "name": "Haresse de Señora",
+    "category": "Gourmand",
+    "audience": "women",
+    "description": "Rose petals, ripe mango and bourbon vanilla in a rich, festive blend.",
+    "scentNotes": [
+      "Rose petals",
+      "Mango",
+      "Bourbon vanilla"
+    ],
+    "imageUrl": "assets/products/haresse-de-senora.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 53,
+        "sizeMl": 50,
+        "priceCents": 195000
+      },
+      {
+        "id": 54,
+        "sizeMl": 100,
+        "priceCents": 340000
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "slug": "hermes",
+    "name": "Hermes",
+    "category": "Signature",
+    "audience": "men",
+    "description": "Bergamot and soft leather on a deep oud base. Classic and bold.",
+    "scentNotes": [
+      "Bergamot",
+      "Leather",
+      "Oud"
+    ],
+    "imageUrl": "assets/products/hermes.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 55,
+        "sizeMl": 50,
+        "priceCents": 245000
+      },
+      {
+        "id": 56,
+        "sizeMl": 100,
+        "priceCents": 430000
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "slug": "le-france",
+    "name": "Le France",
+    "category": "Refreshing",
+    "audience": "men",
+    "description": "Sparkling bergamot and lemon verbena over dry vetiver. Clean every day.",
+    "scentNotes": [
+      "Bergamot",
+      "Lemon verbena",
+      "Vetiver"
+    ],
+    "imageUrl": "assets/products/le-france.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 57,
+        "sizeMl": 50,
+        "priceCents": 135000
+      },
+      {
+        "id": 58,
+        "sizeMl": 100,
+        "priceCents": 235000
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "slug": "miscent",
+    "name": "Miscent",
+    "category": "Verdant",
+    "audience": "men",
+    "description": "Juniper, smoky incense and patchouli. Dark, woody and mysterious.",
+    "scentNotes": [
+      "Juniper",
+      "Incense",
+      "Patchouli"
+    ],
+    "imageUrl": "assets/products/miscent.webp",
+    "isBestSeller": false,
+    "isNewArrival": true,
+    "variants": [
+      {
+        "id": 59,
+        "sizeMl": 50,
+        "priceCents": 145000
+      },
+      {
+        "id": 60,
+        "sizeMl": 100,
+        "priceCents": 255000
+      }
+    ]
   }
 ]

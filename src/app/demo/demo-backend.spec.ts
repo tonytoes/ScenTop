@@ -29,7 +29,7 @@ describe('offline demo backend', () => {
 
   it('lists, filters and finds perfumes from the built-in catalogue', () => {
     const all = call<ProductList>('GET', '/products', null, undefined, { limit: '100' });
-    expect(all.total).toBe(18);
+    expect(all.total).toBe(30);
     const floral = call<ProductList>('GET', '/products', null, undefined, { category: 'Floral', limit: '100' });
     expect(floral.items.every((p) => p.category === 'Floral')).toBe(true);
     const cheap = call<ProductList>('GET', '/products', null, undefined, { sort: 'price-asc' });

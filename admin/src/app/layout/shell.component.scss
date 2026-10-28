@@ -37,14 +37,14 @@
     width: 42px;
     height: 42px;
     border-radius: 14px;
-    background: var(--hero);
+    background: #fffaf1;
+    border: 1px solid var(--line);
     flex: none;
 
     img {
-      width: 26px;
-      height: 26px;
+      width: 30px;
+      height: 30px;
       object-fit: contain;
-      filter: brightness(0) invert(1);
     }
   }
 

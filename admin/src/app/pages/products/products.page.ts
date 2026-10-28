@@ -10,6 +10,8 @@ import { UiService } from '../../shared/ui.service';
 const BUILT_IN_IMAGES = [
   'alriune', 'ambre-sucre', 'artisan', 'athenas-wreath', 'baybayon', 'clio', 'colognia-dreamery', 'deep-rouge', 'fume-shroom',
   'hifumi-atelier', 'l-emetrius', 'lilys-lush', 'melissa', 'nori-blanc', 'rocio-dorado', 'sephyr', 'vera-xong', 'ylang-ylang',
+  'blutenpracht', 'die-rosen', 'fleur-blanche', 'floris-somnium', 'fresh-breeze', 'fugizi', 'harana', 'harene-de-lumiere',
+  'haresse-de-senora', 'hermes', 'le-france', 'miscent',
 ].map((slug) => `assets/products/${slug}.webp`);
 
 const SORTS = {

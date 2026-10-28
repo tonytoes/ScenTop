@@ -16,8 +16,8 @@ describe('catalogue', () => {
 
   it('lists products with sizes and a starting price', async () => {
     const { body } = await request(ctx.app).get('/api/products?limit=60');
-    expect(body.total).toBe(18);
-    expect(body.items).toHaveLength(18);
+    expect(body.total).toBe(30);
+    expect(body.items).toHaveLength(30);
 
     const deepRouge = body.items.find((p: { slug: string }) => p.slug === 'deep-rouge');
     expect(deepRouge.fromPriceCents).toBe(215000);
@@ -41,7 +41,7 @@ describe('catalogue', () => {
     expect(byName.body.items.map((p: { slug: string }) => p.slug)).toEqual(['baybayon']);
 
     const byNote = await request(ctx.app).get('/api/products?q=vetiver');
-    expect(byNote.body.items.map((p: { slug: string }) => p.slug)).toEqual(['fume-shroom']);
+    expect(byNote.body.items.map((p: { slug: string }) => p.slug).sort()).toEqual(['floris-somnium', 'fume-shroom', 'le-france']);
 
     const nothing = await request(ctx.app).get('/api/products?q=zzzz');
     expect(nothing.body).toEqual({ items: [], total: 0 });
@@ -60,7 +60,7 @@ describe('catalogue', () => {
 
     const page2 = await request(ctx.app).get('/api/products?sort=price-asc&limit=3&offset=3');
     expect(page2.body.items[0].slug).not.toBe('melissa');
-    expect(page2.body.total).toBe(18);
+    expect(page2.body.total).toBe(30);
   });
 
   it('looks products up by id list, id and slug', async () => {
@@ -83,7 +83,7 @@ describe('catalogue', () => {
   it('counts perfumes per category', async () => {
     const { body } = await request(ctx.app).get('/api/categories');
     expect(body.map((c: { name: string }) => c.name)).toEqual(['Floral', 'Refreshing', 'Gourmand', 'Signature', 'Verdant']);
-    expect(body.reduce((sum: number, c: { count: number }) => sum + c.count, 0)).toBe(18);
+    expect(body.reduce((sum: number, c: { count: number }) => sum + c.count, 0)).toBe(30);
   });
 
   it('averages customer reviews, one per customer', async () => {
