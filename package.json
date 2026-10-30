@@ -33,6 +33,7 @@
     "cap:sync": "npm run build:mobile && cap sync android",
     "android": "npm run cap:sync && cap open android",
     "android:apk": "npm run cap:sync && node scripts/build-apk.mjs",
+    "android:online": "npm run cap:sync && node scripts/build-apk.mjs --copy-to ScenTop.apk",
     "android:demo": "npm run build:demo && cap sync android && node scripts/build-apk.mjs --copy-to ScenTop-demo.apk",
     "android:install": "node scripts/install-apk.mjs",
     "demo:data": "tsx scripts/build-demo-data.ts",

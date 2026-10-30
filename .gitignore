@@ -79,3 +79,4 @@ Thumbs.db
 
 # Demo APK copied out of the Android build (npm run android:demo)
 ScenTop-demo.apk
+ScenTop.apk
