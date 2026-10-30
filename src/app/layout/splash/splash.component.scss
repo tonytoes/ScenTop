@@ -1,0 +1,73 @@
+:host { display: contents; }
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #fffbed;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+.splash.leaving { opacity: 0; }
+
+/* light diagonal band that sweeps across at the start */
+.stripe {
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 35vw;
+  height: 140%;
+  background: rgba(255, 166, 182, 0.35);
+  transform: translateX(-60vw) skewX(-22deg);
+  animation: stripe 0.8s ease-in 0.1s forwards;
+}
+
+/* pink circle that grows from the bottom-left corner */
+.wipe {
+  position: absolute;
+  inset: 0;
+  background: #ffa6b6;
+  clip-path: circle(0% at 0% 100%);
+  animation: wipe 0.9s cubic-bezier(0.7, 0, 0.2, 1) 0.9s forwards;
+}
+
+.logo {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.word {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 9vw, 56px);
+  letter-spacing: 0.22em;
+  margin-right: -0.22em; /* re-centres text after letter-spacing */
+  color: #474747;
+  opacity: 0;
+  animation: wordIn 0.6s ease-out 0.15s forwards;
+}
+.word span {
+  color: #ff7d94;
+  animation: oToYellow 0.3s ease 1.4s forwards;
+}
+
+.mark {
+  width: clamp(100px, 30vw, 150px);
+  height: auto;
+  opacity: 0;
+  transform: translateY(24px) scale(0.9);
+  animation: markIn 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2) 1.5s forwards;
+}
+
+@keyframes stripe { to { transform: translateX(160vw) skewX(-22deg); } }
+@keyframes wipe { to { clip-path: circle(150% at 0% 100%); } }
+@keyframes wordIn { from { opacity: 0; letter-spacing: 0.5em; } to { opacity: 1; letter-spacing: 0.22em; } }
+@keyframes oToYellow { to { color: #fef65b; } }
+@keyframes markIn { to { opacity: 1; transform: none; } }

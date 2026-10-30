@@ -1,0 +1,86 @@
+:host { display: block; }
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--st-line);
+  border-radius: var(--st-radius);
+  background: var(--st-paper);
+  box-shadow: var(--st-shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--st-shadow); }
+
+.media { position: relative; display: block; background: #fff; }
+.media img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; transition: transform 0.5s ease; }
+.card:hover .media img { transform: scale(1.04); }
+
+.tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--st-rose);
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.tag--gold { background: var(--st-ink); }
+
+.heart {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--st-shadow-sm);
+  color: var(--st-ink);
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.15s ease, color 0.2s ease;
+}
+.heart:active { transform: scale(0.85); }
+.heart.is-on { color: var(--st-rose); }
+
+.body { display: flex; flex: 1; flex-direction: column; gap: 4px; padding: 14px 14px 14px; }
+.category { color: var(--st-gold); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.name { font-size: 1.3rem; line-height: 1.15; }
+.name a { color: var(--st-ink); text-decoration: none; }
+.name a:hover { color: var(--st-rose-dark); }
+
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; padding-top: 10px; }
+.price { font-size: 15px; font-weight: 600; }
+.price small { color: var(--st-muted); font-size: 12px; font-weight: 400; }
+
+.add {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--st-ink);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+.add:hover { background: var(--st-rose); }
+.add:active { transform: scale(0.9); }
+
+@media (min-width: 768px) {
+  .body { padding: 18px; }
+}

@@ -1,0 +1,27 @@
+<ion-content>
+  <main class="auth"><section class="auth__panel">
+    <a routerLink="/login">Back to login</a>
+    <h1>Continue with an email code</h1>
+    <p class="muted">We will send a one-time code to your inbox. New customers can create an account without a password.</p>
+    <p class="terms">By continuing, you agree to our <a routerLink="/terms">terms</a> and <a routerLink="/privacy">privacy policy</a>.</p>
+    @if (!auth.passwordlessEnabled) {
+      <p role="alert" class="alert">Email-code login is not configured yet.</p>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="sent() ? verify() : send()" class="stack" novalidate>
+        @if (!sent()) {
+          <app-text-field label="Email address" type="email" autocomplete="email" [control]="form.controls.email" />
+          <button class="btn btn--primary" type="submit" [disabled]="busy() || cooldown() > 0">{{ cooldown() ? 'Wait ' + cooldown() + 's' : 'Send code' }}</button>
+        } @else {
+          <p role="status">Check {{ form.controls.email.value }} and its spam folder.</p>
+          <label for="otp">Email code</label>
+          <input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" formControlName="otp" />
+          @if (form.controls.otp.touched && form.controls.otp.invalid) { <p role="alert">Enter the numeric code from your email.</p> }
+          <button class="btn btn--primary" type="submit" [disabled]="busy()">{{ busy() ? 'Verifying…' : 'Verify and continue' }}</button>
+          <button class="btn btn--soft" type="button" [disabled]="busy() || cooldown() > 0" (click)="send()">{{ cooldown() ? 'Resend in ' + cooldown() + 's' : 'Resend code' }}</button>
+          <button class="btn btn--ghost" type="button" [disabled]="busy()" (click)="changeEmail()">Change email address</button>
+        }
+        @if (error()) { <p class="alert" role="alert">{{ error() }}</p> }
+      </form>
+    }
+  </section></main>
+</ion-content>

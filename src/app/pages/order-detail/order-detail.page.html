@@ -1,0 +1,76 @@
+<app-page back="/orders" [refresh]="reload">
+  <section class="container section wrap">
+    @if (loading() && !order()) {
+      <div class="skeleton" style="height: 360px"></div>
+    } @else if (error()) {
+      <app-empty-state icon="receipt-outline" heading="We could not open this order" [text]="error()">
+        <a class="btn btn--primary" routerLink="/orders">Back to my orders</a>
+      </app-empty-state>
+    } @else if (order(); as o) {
+      <header class="head">
+        <div>
+          <span class="eyebrow">Order</span>
+          <h1>{{ o.orderNumber }}</h1>
+          <p class="muted">Placed on {{ o.createdAt | date: 'longDate' }} at {{ o.createdAt | date: 'shortTime' }}</p>
+        </div>
+        <span [class]="badge()">{{ statusLabel() }}</span>
+      </header>
+
+      @if (o.status === 'cancelled') {
+        <p class="alert">This order was cancelled.</p>
+      } @else {
+        <ol class="timeline card card--pad" aria-label="Order progress">
+          @for (step of steps; track step.status; let i = $index) {
+            <li [class.is-done]="i <= stepIndex()" [class.is-current]="i === stepIndex()">
+              <span class="dot">
+                @if (i <= stepIndex()) {
+                  <ion-icon name="checkmark" />
+                }
+              </span>
+              <span class="step-label">{{ step.label }}</span>
+            </li>
+          }
+        </ol>
+      }
+
+      <div class="grid">
+        <div class="card card--pad">
+          <h2>Items</h2>
+          <ul class="lines">
+            @for (item of o.items; track $index) {
+              <li>
+                <a [routerLink]="['/product', item.slug]"><img [src]="item.imageUrl" [alt]="item.name" width="64" height="64" /></a>
+                <span class="lines__name">
+                  <a [routerLink]="['/product', item.slug]">{{ item.name }}</a>
+                  <small>{{ item.sizeMl }} ml &times; {{ item.quantity }} at {{ item.unitPriceCents | peso }}</small>
+                </span>
+                <strong>{{ item.unitPriceCents * item.quantity | peso }}</strong>
+              </li>
+            }
+          </ul>
+          <dl>
+            <div><dt>Subtotal</dt><dd>{{ o.subtotalCents | peso }}</dd></div>
+            <div><dt>Shipping</dt><dd>{{ o.shippingFeeCents | peso }}</dd></div>
+            <div class="total"><dt>Total</dt><dd>{{ o.totalCents | peso }}</dd></div>
+          </dl>
+        </div>
+
+        <div class="card card--pad info">
+          <h2>Delivery</h2>
+          <p><strong>{{ o.shipName }}</strong></p>
+          <p class="muted">{{ o.shipPhone }}</p>
+          <p class="muted">{{ o.shipAddress }}</p>
+          @if (o.notes) {
+            <p class="muted"><em>Note: {{ o.notes }}</em></p>
+          }
+          <h3>Payment</h3>
+          <p class="muted"><ion-icon name="cash-outline" /> Cash on delivery</p>
+
+          @if (o.status === 'pending') {
+            <button type="button" class="btn btn--danger btn--block" [attr.aria-busy]="cancelling()" (click)="confirmCancel()">Cancel order</button>
+          }
+        </div>
+      </div>
+    }
+  </section>
+</app-page>

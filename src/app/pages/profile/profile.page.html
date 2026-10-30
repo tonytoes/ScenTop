@@ -1,0 +1,85 @@
+<app-page back="/settings">
+  <header class="page-head">
+    <div class="container">
+      <span class="eyebrow">Your account</span>
+      <h1>My profile</h1>
+    </div>
+  </header>
+
+  <section class="container section grid">
+    @if (auth.user(); as user) {
+      <div class="card card--pad identity">
+        <div class="avatar" aria-hidden="true">
+          @if (user.photoUrl) {
+            <img [src]="user.photoUrl" alt="" />
+          } @else {
+            {{ initials() }}
+          }
+        </div>
+        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+        <p class="muted">{{ user.email }}</p>
+
+        <div class="photo-actions">
+          <label class="btn btn--soft btn--sm">
+            <ion-icon name="camera-outline" /> Change photo
+            <input class="visually-hidden" type="file" accept="image/png,image/jpeg,image/webp" (change)="changePhoto($event)" />
+          </label>
+          @if (user.photoUrl) {
+            <button type="button" class="btn btn--ghost btn--sm" (click)="removePhoto()">Remove</button>
+          }
+        </div>
+        @if (photoError()) {
+          <p class="alert" role="alert">{{ photoError() }}</p>
+        }
+
+        <nav class="shortcuts" aria-label="Account shortcuts">
+          <a routerLink="/orders"><ion-icon name="receipt-outline" /> My orders <ion-icon name="chevron-forward-outline" class="end" /></a>
+          <a routerLink="/wishlist"><ion-icon name="heart-outline" /> Wishlist <ion-icon name="chevron-forward-outline" class="end" /></a>
+          <button type="button" (click)="logout()"><ion-icon name="log-out-outline" /> Log out</button>
+        </nav>
+      </div>
+    }
+
+    <div class="stack" style="--gap: 20px">
+      <form class="card card--pad stack" style="--gap: 6px" [formGroup]="form" (ngSubmit)="saveProfile()" novalidate>
+        <h2>Personal details</h2>
+        <div class="two">
+          <app-text-field label="First name" autocomplete="given-name" [control]="form.controls.firstName" />
+          <app-text-field label="Last name" autocomplete="family-name" [control]="form.controls.lastName" />
+        </div>
+        <app-text-field label="Phone number" type="tel" autocomplete="tel" [control]="form.controls.phone" />
+        <app-text-field label="Delivery address" autocomplete="street-address" [rows]="3" hint="Saved so checkout is quicker next time." [control]="form.controls.address" />
+        @if (formError()) {
+          <p class="alert" role="alert">{{ formError() }}</p>
+        }
+        <button type="submit" class="btn btn--primary" [attr.aria-busy]="saving()">
+          @if (saving()) {
+            <span class="spinner"></span>
+          }
+          Save changes
+        </button>
+      </form>
+
+      @if (auth.user()?.hasPassword !== false) {
+      <form class="card card--pad stack" style="--gap: 6px" [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
+        <h2>Change password</h2>
+        <app-text-field label="Current password" type="password" autocomplete="current-password" [control]="passwordForm.controls.currentPassword" />
+        <app-text-field label="New password" type="password" autocomplete="new-password" hint="At least 8 characters." [control]="passwordForm.controls.newPassword" />
+        <app-text-field label="Confirm new password" type="password" autocomplete="new-password" [control]="passwordForm.controls.confirmPassword" />
+        @if (passwordError()) {
+          <p class="alert" role="alert">{{ passwordError() }}</p>
+        }
+        <button type="submit" class="btn btn--dark" [attr.aria-busy]="savingPassword()">Update password</button>
+      </form>
+
+      } @else {
+        <div class="card card--pad"><h2>Passwordless account</h2><p>Use Google or an email code to sign in. There is no ScenTop password to change.</p></div>
+      }
+      <div class="card card--pad danger">
+        <h2>Delete account</h2>
+        <p class="muted">Permanently remove your profile, cart, wishlist and reviews. Past orders are kept without your personal details.</p>
+        <button type="button" class="btn btn--danger" (click)="confirmDelete()"><ion-icon name="trash-outline" /> Delete my account</button>
+      </div>
+    </div>
+  </section>
+</app-page>

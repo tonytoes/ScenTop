@@ -1,0 +1,31 @@
+.done { display: flex; flex-direction: column; align-items: center; max-width: 640px; padding-top: 48px; padding-bottom: 24px; text-align: center; gap: 16px; }
+.check {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--st-success-bg);
+  color: var(--st-success);
+  font-size: 52px;
+  animation: pop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+@keyframes pop { from { transform: scale(0.4); opacity: 0; } }
+.lead { color: var(--st-muted); }
+.lead strong { color: var(--st-ink); }
+
+.summary { width: 100%; text-align: left; }
+.summary ul { display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0 0 14px; border-bottom: 1px solid var(--st-line); list-style: none; }
+.summary li { display: flex; align-items: center; gap: 12px; }
+.summary img { width: 56px; height: 56px; object-fit: cover; border-radius: 12px; background: #fff; }
+.summary li span { display: flex; flex: 1; flex-direction: column; font-weight: 500; }
+.summary small { color: var(--st-muted); font-weight: 400; }
+dl { display: grid; gap: 8px; margin: 14px 0; }
+dl > div { display: flex; justify-content: space-between; gap: 12px; color: var(--st-muted); }
+dd { margin: 0; color: var(--st-ink); font-weight: 500; }
+.total { padding-top: 10px; border-top: 1px dashed var(--st-line); color: var(--st-ink); font-weight: 600; }
+.total dd { color: var(--st-rose-dark); font-size: 18px; font-weight: 600; }
+.deliver { display: flex; gap: 8px; color: var(--st-muted); font-size: 14px; }
+.deliver ion-icon { flex: none; margin-top: 3px; color: var(--st-rose); }
+
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 8px; }

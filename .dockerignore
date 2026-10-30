@@ -1,0 +1,14 @@
+node_modules
+www
+dist-server
+android
+resources
+.git
+.github
+.angular
+.data
+.env
+.env.*
+!.env.example
+*.log
+coverage

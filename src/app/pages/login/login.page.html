@@ -1,0 +1,40 @@
+<ion-content>
+  <main class="auth">
+    <aside class="auth__art" aria-hidden="true">
+      <img src="assets/images/hero-shelf.webp" alt="" width="1408" height="768" />
+      <div class="auth__quote">
+        <span class="eyebrow">ScenTop</span>
+        <p>Find your signature scent.</p>
+      </div>
+    </aside>
+
+    <section class="auth__panel">
+      <a class="auth__brand" routerLink="/home" aria-label="ScenTop home">
+        <img src="assets/images/logo-hat.png" alt="" width="64" height="55" />
+      </a>
+      <h1>Welcome back</h1>
+      <p class="muted">Log in to see your cart, wishlist and orders.</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="stack" style="--gap: 6px">
+        <app-text-field label="E-mail address" type="email" autocomplete="email" [control]="form.controls.email" />
+        <app-text-field label="Password" type="password" autocomplete="current-password" [control]="form.controls.password" />
+
+        @if (formError()) {
+          <p class="alert" role="alert">{{ formError() }}</p>
+        }
+
+        <button type="submit" class="btn btn--primary btn--block" [attr.aria-busy]="submitting()">
+          @if (submitting()) {
+            <span class="spinner"></span>
+          }
+          Log in
+        </button>
+      </form>
+
+      <app-passwordless-actions [redirect]="redirect" />
+
+      <p class="switch">New to ScenTop? <a routerLink="/signup" [queryParams]="signupQuery">Create an account</a></p>
+      <a class="guest" [routerLink]="'/home'">Continue as guest</a>
+    </section>
+  </main>
+</ion-content>

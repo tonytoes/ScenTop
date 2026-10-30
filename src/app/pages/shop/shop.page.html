@@ -1,0 +1,97 @@
+<app-page [refresh]="reload">
+  <header class="page-head">
+    <div class="container">
+      <span class="eyebrow">The collection</span>
+      <h1>Shop perfumes</h1>
+      <p>Floral, fresh, sweet or bold. Two bottle sizes, and you pay when it arrives.</p>
+    </div>
+  </header>
+
+  <div class="container toolbar">
+    <div class="search">
+      <ion-icon name="search-outline" />
+      <input #searchBox type="search" [formControl]="searchControl" placeholder="Search by name or scent note" aria-label="Search perfumes" autocomplete="off" />
+      @if (searchControl.value) {
+        <button type="button" class="search__clear" aria-label="Clear search" (click)="searchControl.setValue('')">
+          <ion-icon name="close-circle" />
+        </button>
+      }
+    </div>
+
+    <div class="chips" role="group" aria-label="Scent family">
+      <button type="button" class="chip" [class.is-active]="!filters().category" (click)="setFilter({ category: null })">All scents</button>
+      @for (category of categories; track category) {
+        <button type="button" class="chip" [class.is-active]="filters().category === category" (click)="setFilter({ category })">{{ category }}</button>
+      }
+    </div>
+
+    <div class="selects">
+      <label>
+        <span>For</span>
+        <select [value]="filters().audience ?? ''" (change)="setFilter({ audience: $any($event.target).value || null })">
+          <option value="">Everyone</option>
+          <option value="women">Women</option>
+          <option value="men">Men</option>
+        </select>
+      </label>
+      <label>
+        <span>Show</span>
+        <select [value]="filters().collection ?? ''" (change)="setFilter({ collection: $any($event.target).value || null })">
+          <option value="">All</option>
+          <option value="best">Best sellers</option>
+          <option value="new">New arrivals</option>
+        </select>
+      </label>
+      <label>
+        <span>Sort by</span>
+        <select [value]="filters().sort" (change)="setFilter({ sort: $any($event.target).value === 'featured' ? null : $any($event.target).value })">
+          @for (sort of sorts; track sort.value) {
+            <option [value]="sort.value">{{ sort.label }}</option>
+          }
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <section class="container results" aria-live="polite">
+    @if (error() && items().length === 0) {
+      <div class="alert row">
+        <span>{{ error() }}</span>
+        <button type="button" class="btn btn--sm btn--danger" (click)="reload()">Try again</button>
+      </div>
+    } @else if (loading()) {
+      <div class="product-grid">
+        @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) {
+          <div class="skeleton placeholder"></div>
+        }
+      </div>
+    } @else if (items().length === 0) {
+      <app-empty-state icon="search-outline" heading="No perfumes found" text="Try a different word, or clear your filters to see everything.">
+        @if (hasFilters()) {
+          <button type="button" class="btn btn--primary" (click)="clearFilters()">Clear filters</button>
+        }
+      </app-empty-state>
+    } @else {
+      <p class="count">Showing {{ items().length }} of {{ total() }} {{ total() === 1 ? 'perfume' : 'perfumes' }}</p>
+      <div class="product-grid">
+        @for (product of items(); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+
+      @if (error()) {
+        <p class="alert more-error">{{ error() }}</p>
+      }
+      @if (hasMore()) {
+        <div class="more">
+          <button type="button" class="btn btn--ghost" [attr.aria-busy]="loadingMore()" (click)="loadMore()">
+            @if (loadingMore()) {
+              <span class="spinner"></span>
+            }
+            Load more
+          </button>
+        </div>
+      }
+    }
+  </section>
+</app-page>

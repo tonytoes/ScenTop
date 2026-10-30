@@ -1,0 +1,82 @@
+:host { display: block; }
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--st-radius-lg);
+  box-shadow: var(--st-shadow);
+  background: var(--st-ink);
+}
+
+.track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.track::-webkit-scrollbar { display: none; }
+
+.slide { position: relative; flex: 0 0 100%; min-height: min(78vh, 520px); scroll-snap-align: start; }
+.slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(25, 18, 30, 0.82) 0%, rgba(25, 18, 30, 0.35) 55%, rgba(25, 18, 30, 0.08) 100%);
+}
+
+.copy {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 28px 24px 64px;
+  color: #fff;
+}
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #ffd9e1; }
+.copy h2 { max-width: 14ch; color: #fff; font-size: clamp(2.4rem, 9vw, 4.2rem); text-wrap: balance; }
+.copy p { max-width: 42ch; color: #f0e8f2; font-size: 15.5px; }
+.copy .btn { margin-top: 6px; }
+
+.nav {
+  position: absolute;
+  top: 50%;
+  display: none;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--st-ink);
+  font-size: 22px;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+.nav:hover { background: #fff; }
+.nav:active { transform: translateY(-50%) scale(0.92); }
+.nav--prev { left: 18px; }
+.nav--next { right: 18px; }
+
+.dots { position: absolute; bottom: 22px; left: 24px; display: flex; gap: 8px; }
+.dots button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+.dots button.is-active { width: 28px; background: #fff; }
+
+@media (min-width: 768px) {
+  .slide { min-height: 560px; }
+  .copy { padding: 56px 64px 88px; gap: 16px; }
+  .nav { display: grid; }
+  .dots { left: 64px; bottom: 36px; }
+}

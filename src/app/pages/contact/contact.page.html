@@ -1,0 +1,57 @@
+<app-page>
+  <header class="page-head">
+    <div class="container">
+      <span class="eyebrow">Contact our team</span>
+      <h1>We would love to hear from you</h1>
+      <p>Questions about a perfume, an order or anything else? Send us a message or visit the shop.</p>
+    </div>
+  </header>
+
+  <section class="container section layout">
+    <ul class="info">
+      <li class="card">
+        <span class="icon"><ion-icon name="mail-outline" /></span>
+        <div><strong>E-mail us</strong><a [href]="'mailto:' + company.email">{{ company.email }}</a></div>
+      </li>
+      <li class="card">
+        <span class="icon"><ion-icon name="call-outline" /></span>
+        <div><strong>Call or message us</strong><a [href]="'tel:' + company.phoneLink">{{ company.phone }}</a></div>
+      </li>
+      <li class="card">
+        <span class="icon"><ion-icon name="location-outline" /></span>
+        <div><strong>Visit us</strong><span>{{ company.address }}</span></div>
+      </li>
+      <li class="card">
+        <span class="icon"><ion-icon name="time-outline" /></span>
+        <div><strong>Opening hours</strong><span>{{ company.hours }}</span></div>
+      </li>
+    </ul>
+
+    <div class="card card--pad">
+      @if (sent()) {
+        <div class="thanks">
+          <div class="check"><ion-icon name="checkmark" /></div>
+          <h2>Message sent</h2>
+          <p class="muted">Thank you for writing to us. We will reply to your e-mail as soon as we can.</p>
+          <button type="button" class="btn btn--ghost" (click)="sent.set(false)">Send another message</button>
+        </div>
+      } @else {
+        <h2>Send us a message</h2>
+        <form class="stack" style="--gap: 6px" [formGroup]="form" (ngSubmit)="send()" novalidate>
+          <app-text-field label="Your name" autocomplete="name" [control]="form.controls.name" />
+          <app-text-field label="E-mail address" type="email" autocomplete="email" [control]="form.controls.email" />
+          <app-text-field label="Message" [rows]="5" [maxlength]="2000" [control]="form.controls.message" />
+          @if (formError()) {
+            <p class="alert" role="alert">{{ formError() }}</p>
+          }
+          <button type="submit" class="btn btn--primary" [attr.aria-busy]="sending()">
+            @if (sending()) {
+              <span class="spinner"></span>
+            }
+            Send message
+          </button>
+        </form>
+      }
+    </div>
+  </section>
+</app-page>

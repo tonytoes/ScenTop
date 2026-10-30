@@ -1,0 +1,17 @@
+.layout { display: grid; gap: 24px; align-items: start; }
+.info { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.info li { display: flex; align-items: center; gap: 14px; padding: 16px; }
+.icon { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 15px; background: var(--st-blush); color: var(--st-rose-dark); font-size: 24px; }
+.info div { display: flex; flex-direction: column; min-width: 0; }
+.info strong { font-weight: 600; }
+.info span:not(.icon), .info a { color: var(--st-muted); overflow-wrap: anywhere; }
+.info a { color: var(--st-rose-dark); }
+h2 { margin-bottom: 14px; font-size: 1.8rem; }
+
+.thanks { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px 8px; text-align: center; }
+.check { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 50%; background: var(--st-success-bg); color: var(--st-success); font-size: 38px; }
+.thanks h2 { margin: 6px 0 0; }
+
+@media (min-width: 900px) {
+  .layout { grid-template-columns: 380px minmax(0, 1fr); gap: 32px; }
+}

@@ -1,0 +1,68 @@
+<app-page back="/cart">
+  <header class="page-head">
+    <div class="container">
+      <span class="eyebrow">Last step</span>
+      <h1>Checkout</h1>
+    </div>
+  </header>
+
+  <section class="container section">
+    @if (cartService.cart().items.length === 0 && !cartService.loading()) {
+      <app-empty-state icon="cart-outline" heading="Your cart is empty" text="Add something to your cart before checking out.">
+        <a class="btn btn--primary" routerLink="/shop">Browse perfumes</a>
+      </app-empty-state>
+    } @else {
+      @let cart = cartService.cart();
+      <form class="layout" [formGroup]="form" (ngSubmit)="placeOrder()" novalidate>
+        <div class="stack" style="--gap: 20px">
+          <section class="card card--pad stack" aria-labelledby="delivery-title">
+            <h2 id="delivery-title" class="block-title"><span class="num">1</span> Delivery details</h2>
+            <app-text-field label="Full name" [control]="form.controls.shipName" autocomplete="name" />
+            <app-text-field label="Phone number" type="tel" [control]="form.controls.shipPhone" autocomplete="tel" placeholder="0917 123 4567" />
+            <app-text-field label="Delivery address" [control]="form.controls.shipAddress" autocomplete="street-address" [rows]="3" placeholder="House no., street, barangay, city" />
+            <app-text-field label="Notes for the rider (optional)" [control]="form.controls.notes" [rows]="2" [maxlength]="300" />
+          </section>
+
+          <section class="card card--pad stack" aria-labelledby="payment-title">
+            <h2 id="payment-title" class="block-title"><span class="num">2</span> Payment method</h2>
+            <label class="pay is-selected">
+              <input type="radio" name="payment" checked />
+              <ion-icon name="cash-outline" />
+              <span><strong>Cash on delivery</strong><small>Pay the rider when your perfume arrives</small></span>
+              <ion-icon name="checkmark-circle" class="pay__check" />
+            </label>
+          </section>
+        </div>
+
+        <aside class="summary card card--pad" aria-label="Order summary">
+          <h2>Order summary</h2>
+          <ul class="lines">
+            @for (item of cart.items; track item.variantId) {
+              <li>
+                <img [src]="item.imageUrl" [alt]="item.name" width="56" height="56" />
+                <span class="lines__name">{{ item.name }}<small>{{ item.sizeMl }} ml &times; {{ item.quantity }}</small></span>
+                <strong>{{ item.lineTotalCents | peso }}</strong>
+              </li>
+            }
+          </ul>
+          <dl>
+            <div><dt>Subtotal</dt><dd>{{ cart.subtotalCents | peso }}</dd></div>
+            <div><dt>Shipping fee</dt><dd>{{ cart.shippingFeeCents | peso }}</dd></div>
+            <div class="total"><dt>Total</dt><dd>{{ cart.totalCents | peso }}</dd></div>
+          </dl>
+
+          @if (formError()) {
+            <p class="alert" role="alert">{{ formError() }}</p>
+          }
+          <button type="submit" class="btn btn--primary btn--block" [attr.aria-busy]="submitting()">
+            @if (submitting()) {
+              <span class="spinner"></span>
+            }
+            Place order &middot; {{ cart.totalCents | peso }}
+          </button>
+          <p class="fine">By placing your order you agree to our <a routerLink="/terms">terms and conditions</a>.</p>
+        </aside>
+      </form>
+    }
+  </section>
+</app-page>

@@ -1,0 +1,28 @@
+<article class="card">
+  <a class="media" [routerLink]="['/product', product().slug]" [attr.aria-label]="'View ' + product().name">
+    <img [src]="product().imageUrl" [alt]="product().name" width="400" height="400" loading="lazy" decoding="async" />
+    @if (product().isNewArrival) {
+      <span class="tag">New</span>
+    } @else if (product().isBestSeller) {
+      <span class="tag tag--gold">Best seller</span>
+    }
+  </a>
+
+  <button type="button" class="heart" [class.is-on]="saved()" (click)="toggleSaved()" [attr.aria-pressed]="saved()" [attr.aria-label]="(saved() ? 'Remove ' : 'Save ') + product().name + (saved() ? ' from' : ' to') + ' wishlist'">
+    <ion-icon [name]="saved() ? 'heart' : 'heart-outline'" />
+  </button>
+
+  <div class="body">
+    <p class="category">{{ product().category }}</p>
+    <h3 class="name"><a [routerLink]="['/product', product().slug]">{{ product().name }}</a></h3>
+    @if (product().ratingCount > 0) {
+      <app-rating-stars [value]="product().ratingAvg" [count]="product().ratingCount" />
+    }
+    <div class="foot">
+      <p class="price"><small>from</small> {{ product().fromPriceCents | peso }}</p>
+      <button type="button" class="add" (click)="quickAdd()" [attr.aria-label]="'Add ' + product().name + ' to cart'">
+        <ion-icon name="add-outline" />
+      </button>
+    </div>
+  </div>
+</article>

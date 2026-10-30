@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run build:site",
+  "outputDirectory": "www",
+  "rewrites": [
+    { "source": "/admin/:path*", "destination": "/admin/index.html" },
+    { "source": "/((?!admin/|assets/).*)", "destination": "/index.html" }
+  ]
+}

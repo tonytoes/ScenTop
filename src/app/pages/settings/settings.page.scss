@@ -1,0 +1,26 @@
+.narrow { max-width: 640px; }
+.login-card { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.login-card p { margin-top: 2px; font-size: 13.5px; }
+
+.list { margin: 0; padding: 6px; list-style: none; }
+.list a, .list button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  border-radius: 16px;
+  background: none;
+  color: var(--st-ink);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.list a:hover, .list button:hover { background: var(--st-blush); text-decoration: none; }
+.icon { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 14px; background: var(--st-blush); color: var(--st-rose-dark); font-size: 22px; }
+.text { display: flex; flex: 1; flex-direction: column; }
+.text small { color: var(--st-muted); font-size: 13px; }
+.chevron { color: var(--st-muted); }

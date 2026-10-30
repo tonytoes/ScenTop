@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="bar">
+      <div class="bar__left">
+        @if (back(); as fallback) {
+          <ion-buttons>
+            <ion-back-button [defaultHref]="fallback" text="" icon="arrow-back-outline" aria-label="Go back" />
+          </ion-buttons>
+        } @else {
+          <ion-buttons>
+            <ion-menu-button menu="main-menu" aria-label="Open menu">
+              <ion-icon name="menu-outline" />
+            </ion-menu-button>
+          </ion-buttons>
+        }
+      </div>
+
+      <a class="brand" routerLink="/home" aria-label="ScenTop home">
+        <img src="assets/images/logo-hat.png" alt="" width="40" height="34" />
+        <span>ScenTop</span>
+      </a>
+
+      <nav class="links" aria-label="Main">
+        @for (link of links; track link.url) {
+          <a [routerLink]="link.url" routerLinkActive="is-active">{{ link.label }}</a>
+        }
+      </nav>
+
+      <div class="bar__right">
+        <button type="button" class="icon-btn" aria-label="Search perfumes" (click)="search()">
+          <ion-icon name="search-outline" />
+        </button>
+        <a class="icon-btn desktop-only" routerLink="/wishlist" aria-label="Wishlist">
+          <ion-icon name="heart-outline" />
+          @if (wishlist.ids().size > 0) {
+            <span class="count">{{ wishlist.ids().size }}</span>
+          }
+        </a>
+        <a class="icon-btn" routerLink="/cart" [attr.aria-label]="'Cart, ' + cart.count() + ' items'">
+          <ion-icon name="cart-outline" />
+          @if (cart.count() > 0) {
+            <span class="count">{{ cart.count() }}</span>
+          }
+        </a>
+        @if (auth.isLoggedIn()) {
+          <a class="avatar desktop-only" routerLink="/profile" aria-label="Your profile">
+            @if (auth.user()?.photoUrl; as photo) {
+              <img [src]="photo" alt="" />
+            } @else {
+              {{ initials() }}
+            }
+          </a>
+        } @else {
+          <a class="btn btn--dark btn--sm desktop-only" routerLink="/login">Log in</a>
+        }
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>

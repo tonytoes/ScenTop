@@ -1,0 +1,67 @@
+<aside class="rail">
+  <a class="brand" routerLink="/">
+    <span class="mark"><img src="assets/images/logo-hat.png" alt="" /></span>
+    <span class="word">
+      <b>ScenTop</b>
+      <small>Admin studio</small>
+    </span>
+  </a>
+
+  <nav>
+    @for (item of nav; track item.path) {
+      <a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: item.exact }" [attr.aria-label]="item.label">
+        <app-icon [name]="item.icon" />
+        <span>{{ item.label }}</span>
+        @if (item.path === '/orders' && pending() > 0) {
+          <em [attr.aria-label]="pending() + ' pending'">{{ pending() }}</em>
+        }
+      </a>
+    }
+  </nav>
+
+  <div class="foot">
+    <button class="mode" type="button" (click)="theme.toggle()" [attr.aria-label]="theme.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+      <app-icon [name]="theme.theme() === 'dark' ? 'sun' : 'moon'" />
+      <span>{{ theme.theme() === 'dark' ? 'Light mode' : 'Dark mode' }}</span>
+    </button>
+    <div class="me">
+      @if (auth.user()?.photoUrl; as photo) {
+        <img class="avatar" [src]="photo" alt="" />
+      } @else {
+        <span class="avatar">{{ initials(auth.name()) }}</span>
+      }
+      <span class="who-text">
+        <b>{{ auth.name() }}</b>
+        <small>{{ auth.user()?.email }}</small>
+      </span>
+      <button class="icon-btn" type="button" (click)="logout()" aria-label="Log out" title="Log out">
+        <app-icon name="logout" [size]="16" />
+      </button>
+    </div>
+  </div>
+</aside>
+
+<main>
+  <router-outlet />
+</main>
+
+<div class="toasts" aria-live="polite">
+  @for (toast of ui.toasts(); track toast.id) {
+    <div class="toast" [class.error]="toast.kind === 'error'">
+      <app-icon [name]="toast.kind === 'error' ? 'ban' : 'check'" [size]="16" />
+      {{ toast.text }}
+    </div>
+  }
+</div>
+
+@if (ui.confirmation(); as c) {
+  <div class="scrim" (click)="ui.answer(false)" aria-hidden="true"></div>
+  <div class="dialog" role="alertdialog" aria-modal="true" [attr.aria-label]="c.title">
+    <h2>{{ c.title }}</h2>
+    <p>{{ c.text }}</p>
+    <div class="actions">
+      <button class="btn" type="button" (click)="ui.answer(false)">Keep it</button>
+      <button class="btn" [class.btn-accent]="c.danger" [class.btn-primary]="!c.danger" type="button" (click)="ui.answer(true)">{{ c.action }}</button>
+    </div>
+  </div>
+}

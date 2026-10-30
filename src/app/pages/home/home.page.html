@@ -1,0 +1,120 @@
+<app-page [refresh]="reload">
+  <h1 class="visually-hidden">ScenTop: find your signature scent</h1>
+
+  <div class="container intro">
+    <app-hero-carousel />
+  </div>
+
+  <section class="container section categories" aria-labelledby="categories-title">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Browse by scent</span>
+        <h2 id="categories-title">What do you want to smell like?</h2>
+      </div>
+    </div>
+    <div class="tiles">
+      @for (category of categories; track category.name) {
+        <a class="tile reveal" routerLink="/shop" [queryParams]="{ category: category.name }">
+          <span class="tile__icon"><ion-icon [name]="category.icon" /></span>
+          <strong>{{ category.name }}</strong>
+          <small>{{ category.blurb }}</small>
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="best-title">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Loved by our customers</span>
+        <h2 id="best-title">Best sellers</h2>
+      </div>
+      <a class="btn btn--ghost btn--sm" routerLink="/shop" [queryParams]="{ collection: 'best' }">View all</a>
+    </div>
+
+    @if (error()) {
+      <div class="alert row">
+        <span>{{ error() }}</span>
+        <button type="button" class="btn btn--sm btn--danger" (click)="reload()">Try again</button>
+      </div>
+    } @else if (loading()) {
+      <div class="product-grid">
+        @for (item of [1, 2, 3, 4]; track item) {
+          <div class="skeleton placeholder"></div>
+        }
+      </div>
+    } @else {
+      <div class="product-grid">
+        @for (product of bestSellers(); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+    }
+  </section>
+
+  <section class="container section" aria-labelledby="shopfor-title">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Shop for</span>
+        <h2 id="shopfor-title">Find a scent for every one</h2>
+      </div>
+    </div>
+    <div class="shop-for">
+      <a class="promo" routerLink="/shop" [queryParams]="{ audience: 'men' }">
+        <img src="assets/images/for-men.webp" alt="" width="1408" height="768" loading="lazy" />
+        <span class="promo__label">
+          <strong>Men's perfumes</strong>
+          <span>Shop now <ion-icon name="arrow-forward-outline" /></span>
+        </span>
+      </a>
+      <a class="promo" routerLink="/shop" [queryParams]="{ audience: 'women' }">
+        <img src="assets/images/for-women.webp" alt="" width="1024" height="559" loading="lazy" />
+        <span class="promo__label">
+          <strong>Women's perfumes</strong>
+          <span>Shop now <ion-icon name="arrow-forward-outline" /></span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="new-title">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Just arrived</span>
+        <h2 id="new-title">New arrivals</h2>
+      </div>
+      <a class="btn btn--ghost btn--sm" routerLink="/shop" [queryParams]="{ collection: 'new' }">View all</a>
+    </div>
+
+    @if (loading() && !error()) {
+      <div class="product-grid">
+        @for (item of [1, 2, 3, 4]; track item) {
+          <div class="skeleton placeholder"></div>
+        }
+      </div>
+    } @else if (!error()) {
+      <div class="product-grid">
+        @for (product of newArrivals(); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+    }
+  </section>
+
+  <section class="container section story" aria-labelledby="story-title">
+    <div class="story__card">
+      <img src="assets/images/store.webp" alt="The ScenTop boutique in Cubao" width="1408" height="768" loading="lazy" />
+      <div class="story__copy">
+        <span class="eyebrow">Our story</span>
+        <h2 id="story-title">Where scent can protect you</h2>
+        <p>
+          ScenTop began as a small perfume stall in Quezon City. Today we bring the same personal, try-before-you-buy care to your phone.
+        </p>
+        <div class="row">
+          <a class="btn btn--primary" routerLink="/about">Read our story</a>
+          <a class="btn btn--ghost" routerLink="/about-products">About our products</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</app-page>

@@ -1,0 +1,208 @@
+<div class="page">
+  <header class="page-head">
+    <div>
+      <h1>Products</h1>
+      <p>{{ summary().live }} on sale · {{ summary().hidden }} hidden · {{ summary().revenue | peso: 'short' }} sold in total</p>
+    </div>
+    <div class="toolbar">
+      <label class="search">
+        <app-icon name="search" />
+        <input class="input" type="search" placeholder="Name or scent note" [ngModel]="query()" (ngModelChange)="query.set($event)" aria-label="Search perfumes" />
+      </label>
+      <button class="btn btn-accent" type="button" (click)="create()"><app-icon name="plus" /> New perfume</button>
+    </div>
+  </header>
+
+  <div class="filters">
+    <div class="seg">
+      <button type="button" [class.on]="filter() === 'all'" (click)="filter.set('all')">All</button>
+      @for (c of categories; track c) {
+        <button type="button" [class.on]="filter() === c" (click)="filter.set(c)">{{ c }} <small>{{ counts()[c] ?? 0 }}</small></button>
+      }
+      <button type="button" [class.on]="filter() === 'hidden'" (click)="filter.set('hidden')">Hidden</button>
+    </div>
+    <label class="sort">
+      <span class="muted">Sort by</span>
+      <select class="input" [ngModel]="sort()" (ngModelChange)="sort.set($event)">
+        @for (s of sorts; track s.key) {
+          <option [value]="s.key">{{ s.label }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  @if (error()) {
+    <div class="alert" role="alert">{{ error() }}</div>
+  }
+
+  <div class="grid">
+    @for (p of visible(); track p.id) {
+      <article class="product" [class.hidden]="!p.isActive" (click)="edit(p)" tabindex="0" (keydown.enter)="edit(p)">
+        <div class="art">
+          <img [src]="p.imageUrl" [alt]="p.name" loading="lazy" />
+          <div class="flags">
+            @if (p.isBestSeller) {
+              <span class="flag gold">Best seller</span>
+            }
+            @if (p.isNewArrival) {
+              <span class="flag">New</span>
+            }
+            @if (!p.isActive) {
+              <span class="flag dark">Hidden</span>
+            }
+          </div>
+          <button class="eye" type="button" (click)="toggleActive(p, $event)" [attr.aria-label]="p.isActive ? 'Hide from shop' : 'Show in shop'" [title]="p.isActive ? 'Hide from shop' : 'Show in shop'">
+            <app-icon [name]="p.isActive ? 'eye' : 'eyeOff'" [size]="16" />
+          </button>
+        </div>
+        <div class="info">
+          <div class="title-row">
+            <h3>{{ p.name }}</h3>
+            <span class="cat cat-{{ p.category.toLowerCase() }}">{{ p.category }}</span>
+          </div>
+          <div class="prices">
+            @for (v of p.variants; track v.sizeMl) {
+              <span><small>{{ v.sizeMl }}ml</small> {{ v.priceCents | peso: 'whole' }}</span>
+            }
+          </div>
+          <div class="perf">
+            <div class="perf-bar" [attr.aria-label]="'Share of best seller revenue'"><i [style.width.%]="(p.revenueCents / summary().maxRevenue) * 100"></i></div>
+            <dl>
+              <div><dt>Sold</dt><dd>{{ p.unitsSold }}</dd></div>
+              <div><dt>Revenue</dt><dd>{{ p.revenueCents | peso: 'short' }}</dd></div>
+              <div><dt><app-icon name="star" [size]="11" /></dt><dd>{{ p.ratingCount ? p.ratingAvg : '—' }}</dd></div>
+              <div><dt><app-icon name="heart" [size]="11" /></dt><dd>{{ p.wishCount }}</dd></div>
+            </dl>
+          </div>
+        </div>
+      </article>
+    } @empty {
+      @if (!loading()) {
+        <div class="empty">No perfumes match.</div>
+      }
+    }
+    @if (loading()) {
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton" style="height: 360px"></div>
+      }
+    }
+  </div>
+</div>
+
+@if (draft(); as d) {
+  <div class="scrim" (click)="close()" aria-hidden="true"></div>
+  <aside class="drawer editor" role="dialog" aria-modal="true" [attr.aria-label]="d.id ? 'Edit ' + d.name : 'New perfume'">
+    <header>
+      <div>
+        <span class="eyebrow">{{ d.id ? 'Edit perfume' : 'New perfume' }}</span>
+        <h2 class="display big">{{ d.name || 'Untitled' }}</h2>
+      </div>
+      <button class="icon-btn" type="button" (click)="close()" aria-label="Close"><app-icon name="close" /></button>
+    </header>
+
+    <form class="body" id="product-form" (ngSubmit)="save()">
+      <div class="picture">
+        <img [src]="d.imageUrl" alt="" />
+        <div class="picture-tools">
+          <label class="btn btn-sm">
+            <app-icon name="upload" [size]="14" /> Upload
+            <input type="file" accept="image/png,image/jpeg,image/webp" (change)="upload($event)" hidden />
+          </label>
+          <div class="swatches" aria-label="Pictures in the app">
+            @for (img of images; track img) {
+              <button type="button" [class.on]="d.imageUrl === img" (click)="set('imageUrl', img)"><img [src]="img" alt="" loading="lazy" /></button>
+            }
+          </div>
+          @if (err('imageUrl')) {
+            <small class="error">{{ err('imageUrl') }}</small>
+          }
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="field">
+          <span>Name</span>
+          <input class="input" name="name" [ngModel]="d.name" (ngModelChange)="set('name', $event)" required maxlength="80" />
+          @if (err('name')) {
+            <small class="error">{{ err('name') }}</small>
+          }
+        </label>
+        <label class="field">
+          <span>Web address</span>
+          <input class="input" name="slug" [ngModel]="d.slug" (ngModelChange)="set('slug', $event)" placeholder="made from the name" />
+          @if (err('slug')) {
+            <small class="error">{{ err('slug') }}</small>
+          }
+        </label>
+      </div>
+
+      <div class="field">
+        <span>Scent family</span>
+        <div class="choices">
+          @for (c of categories; track c) {
+            <button type="button" class="choice cat-{{ c.toLowerCase() }}" [class.on]="d.category === c" (click)="set('category', c)">{{ c }}</button>
+          }
+        </div>
+      </div>
+
+      <div class="field">
+        <span>Made for</span>
+        <div class="seg">
+          <button type="button" [class.on]="d.audience === 'women'" (click)="set('audience', 'women')">Her</button>
+          <button type="button" [class.on]="d.audience === 'men'" (click)="set('audience', 'men')">Him</button>
+          <button type="button" [class.on]="d.audience === 'unisex'" (click)="set('audience', 'unisex')">Everyone</button>
+        </div>
+      </div>
+
+      <label class="field">
+        <span>Description</span>
+        <textarea class="input" name="description" [ngModel]="d.description" (ngModelChange)="set('description', $event)" maxlength="1000"></textarea>
+        @if (err('description')) {
+          <small class="error">{{ err('description') }}</small>
+        }
+      </label>
+
+      <div class="field">
+        <span>Scent notes</span>
+        <div class="notes">
+          @for (n of d.notes; track n) {
+            <span class="note">{{ n }}<button type="button" (click)="removeNote(n)" [attr.aria-label]="'Remove ' + n"><app-icon name="close" [size]="12" /></button></span>
+          }
+          <input class="note-input" name="note" [(ngModel)]="noteInput" (keydown.enter)="$event.preventDefault(); addNote()" (blur)="addNote()" placeholder="Add a note, press Enter" />
+        </div>
+      </div>
+
+      <div class="field">
+        <span>Bottles and prices</span>
+        <div class="variants">
+          @for (v of d.variants; track $index; let i = $index) {
+            <div class="variant">
+              <label><input class="input" type="number" min="1" [name]="'size' + i" [(ngModel)]="v.sizeMl" aria-label="Size in ml" /><em>ml</em></label>
+              <label><em>₱</em><input class="input" type="number" min="0" step="0.01" [name]="'price' + i" [(ngModel)]="v.pesos" aria-label="Price in pesos" /></label>
+              <button class="icon-btn" type="button" (click)="removeVariant(i)" [disabled]="d.variants.length === 1" aria-label="Remove size"><app-icon name="trash" [size]="16" /></button>
+            </div>
+          }
+          <button class="btn btn-sm add" type="button" (click)="addVariant()" [disabled]="d.variants.length >= 6"><app-icon name="plus" [size]="14" /> Add a size</button>
+          @if (err('variants')) {
+            <small class="error">{{ err('variants') }}</small>
+          }
+        </div>
+      </div>
+
+      <div class="toggles">
+        <label class="switch"><input type="checkbox" name="active" [ngModel]="d.isActive" (ngModelChange)="set('isActive', $event)" /><i></i>On sale in the shop</label>
+        <label class="switch"><input type="checkbox" name="best" [ngModel]="d.isBestSeller" (ngModelChange)="set('isBestSeller', $event)" /><i></i>Best seller badge</label>
+        <label class="switch"><input type="checkbox" name="new" [ngModel]="d.isNewArrival" (ngModelChange)="set('isNewArrival', $event)" /><i></i>New arrival badge</label>
+      </div>
+    </form>
+
+    <footer>
+      @if (d.id) {
+        <button class="btn btn-danger" type="button" (click)="remove()"><app-icon name="trash" [size]="16" /> Delete</button>
+      }
+      <span class="spacer"></span>
+      <button class="btn" type="button" (click)="close()">Cancel</button>
+      <button class="btn btn-primary" type="submit" form="product-form" [disabled]="saving()">{{ saving() ? 'Saving…' : d.id ? 'Save changes' : 'Add to shop' }}</button>
+    </footer>
+  </aside>
+}

@@ -1,0 +1,10 @@
+{
+  // Used by npm run build:server. Compiles to dist-server/ without the tests.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "../dist-server",
+    "rootDir": "."
+  },
+  "exclude": ["tests"]
+}

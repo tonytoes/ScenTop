@@ -1,0 +1,156 @@
+<app-page back="/shop" [refresh]="reload">
+  @if (loading() && !product()) {
+    <div class="container detail">
+      <div class="skeleton gallery-skeleton"></div>
+      <div class="stack">
+        <div class="skeleton line" style="width: 40%"></div>
+        <div class="skeleton line line--lg"></div>
+        <div class="skeleton line" style="width: 60%"></div>
+        <div class="skeleton line line--block"></div>
+      </div>
+    </div>
+  } @else if (notFound()) {
+    <app-empty-state icon="search-outline" heading="We could not find that perfume" text="It may have been renamed or is no longer available.">
+      <a class="btn btn--primary" routerLink="/shop">Browse all perfumes</a>
+    </app-empty-state>
+  } @else if (error()) {
+    <div class="container section">
+      <div class="alert row">
+        <span>{{ error() }}</span>
+        <button type="button" class="btn btn--sm btn--danger" (click)="reload()">Try again</button>
+      </div>
+    </div>
+  } @else if (product(); as p) {
+    <article class="container detail">
+      <div class="gallery reveal">
+        <img [src]="p.imageUrl" [alt]="p.name" width="800" height="800" fetchpriority="high" />
+        @if (p.isNewArrival) {
+          <span class="tag">New arrival</span>
+        } @else if (p.isBestSeller) {
+          <span class="tag tag--dark">Best seller</span>
+        }
+      </div>
+
+      <div class="info">
+        <p class="category">{{ p.category }} &middot; For {{ audience() }}</p>
+        <h1>{{ p.name }}</h1>
+
+        <div class="rating-row">
+          @if (p.ratingCount > 0) {
+            <app-rating-stars [value]="p.ratingAvg" [count]="p.ratingCount" />
+          } @else {
+            <span class="muted">No reviews yet</span>
+          }
+        </div>
+
+        <p class="price">{{ selectedVariant()?.priceCents | peso }}</p>
+
+        <p class="description">{{ p.description }}</p>
+
+        @if (p.scentNotes.length > 0) {
+          <div class="notes">
+            <span class="label">Scent notes</span>
+            <ul>
+              @for (note of p.scentNotes; track note) {
+                <li>{{ note }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        <div class="sizes" role="radiogroup" aria-label="Bottle size">
+          <span class="label">Size</span>
+          <div class="sizes__row">
+            @for (variant of p.variants; track variant.id) {
+              <button type="button" class="size" role="radio" [class.is-active]="variant.id === selectedVariant()?.id" [attr.aria-checked]="variant.id === selectedVariant()?.id" (click)="selectVariant(variant.id)">
+                <strong>{{ variant.sizeMl }} ml</strong>
+                <span>{{ variant.priceCents | peso }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="buy">
+          <div class="buy__row">
+            <app-quantity-stepper [value]="quantity()" (valueChange)="quantity.set($event)" />
+            <p class="buy__total"><small>Total</small>{{ totalCents() | peso }}</p>
+          </div>
+          <button type="button" class="btn btn--primary btn--block" [attr.aria-busy]="adding()" (click)="addToCart()">
+            @if (adding()) {
+              <span class="spinner"></span>
+            }
+            Add to cart
+          </button>
+        </div>
+
+        <div class="secondary">
+          <button type="button" class="btn btn--soft btn--sm" [attr.aria-pressed]="saved()" (click)="toggleSaved()">
+            <ion-icon [name]="saved() ? 'heart' : 'heart-outline'" />
+            {{ saved() ? 'Saved to wishlist' : 'Add to wishlist' }}
+          </button>
+          <button type="button" class="btn btn--soft btn--sm" (click)="share()">
+            <ion-icon name="share-social-outline" /> Share
+          </button>
+        </div>
+
+        <ul class="perks">
+          <li><ion-icon name="cash-outline" /> Pay with cash on delivery</li>
+          <li><ion-icon name="car-outline" /> Flat &#8369;50.00 shipping</li>
+        </ul>
+      </div>
+    </article>
+
+    <section class="container reviews" aria-labelledby="reviews-title">
+      <h2 id="reviews-title">Customer reviews</h2>
+
+      <div class="reviews__grid">
+        <div class="card card--pad write">
+          @if (auth.isLoggedIn()) {
+            <h3>Write a review</h3>
+            <app-rating-stars [(value)]="newRating" interactive />
+            <textarea [formControl]="reviewText" rows="3" maxlength="1000" placeholder="What do you think of this scent? (optional)" aria-label="Your review"></textarea>
+            @if (reviewError()) {
+              <p class="alert" role="alert">{{ reviewError() }}</p>
+            }
+            <button type="button" class="btn btn--dark btn--sm" [attr.aria-busy]="postingReview()" (click)="submitReview()">Post review</button>
+          } @else {
+            <h3>Tried this scent?</h3>
+            <p class="muted">Log in to share your rating with other shoppers.</p>
+            <a class="btn btn--dark btn--sm" routerLink="/login" [queryParams]="{ redirect: '/product/' + p.slug }">Log in to review</a>
+          }
+        </div>
+
+        <div class="list">
+          @for (review of reviews(); track review.id) {
+            <article class="review">
+              <div class="review__head">
+                <strong>{{ review.author }}</strong>
+                <span class="muted">{{ review.createdAt | date: 'mediumDate' }}</span>
+              </div>
+              <app-rating-stars [value]="review.rating" />
+              @if (review.comment) {
+                <p>{{ review.comment }}</p>
+              }
+            </article>
+          } @empty {
+            <p class="muted">No reviews yet. Be the first to share what you think.</p>
+          }
+        </div>
+      </div>
+    </section>
+
+    @if (related().length > 0) {
+      <section class="container section" aria-labelledby="related-title">
+        <div class="section-head">
+          <h2 id="related-title">More {{ p.category.toLowerCase() }} scents</h2>
+          <a class="btn btn--ghost btn--sm" routerLink="/shop" [queryParams]="{ category: p.category }">View all</a>
+        </div>
+        <div class="product-grid">
+          @for (item of related(); track item.id) {
+            <app-product-card [product]="item" />
+          }
+        </div>
+      </section>
+    }
+  }
+</app-page>

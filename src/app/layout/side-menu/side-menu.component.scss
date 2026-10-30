@@ -1,0 +1,99 @@
+ion-menu {
+  --width: min(86vw, 340px);
+  --background: var(--st-cream);
+}
+ion-content {
+  --background: var(--st-cream);
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: calc(var(--ion-safe-area-top, 0px) + 20px) 14px calc(var(--ion-safe-area-bottom, 0px) + 20px);
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: var(--st-radius);
+  background: linear-gradient(135deg, var(--st-blush) 0%, var(--st-blush-deep) 100%);
+  color: var(--st-ink);
+  text-decoration: none;
+}
+.avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--st-rose-dark);
+  font: 600 20px var(--st-font-display);
+  box-shadow: var(--st-shadow-sm);
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar ion-icon { font-size: 26px; }
+.profile__text { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.profile__text strong { overflow: hidden; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
+.profile__text small { margin-top: 2px; color: var(--st-muted); font-size: 12.5px; }
+.profile__chevron { color: var(--st-muted); }
+
+.group {
+  margin: 24px 12px 8px;
+  color: var(--st-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  color: var(--st-ink);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+.item:hover { background: rgba(192, 74, 105, 0.07); text-decoration: none; }
+.item.is-active { background: var(--st-blush); }
+.item__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: var(--st-shadow-sm);
+  color: var(--st-rose-dark);
+  font-size: 20px;
+}
+.item__text { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.item__text strong { font-size: 14.5px; font-weight: 500; }
+.item__text small { color: var(--st-muted); font-size: 12px; line-height: 1.3; }
+.item__badge {
+  min-width: 24px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--st-rose);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.menu__foot {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 24px;
+}
