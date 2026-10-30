@@ -1,7 +1,0 @@
-{
-  "name": "ScenTop",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular-standalone"
-}
