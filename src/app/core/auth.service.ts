@@ -109,11 +109,8 @@ async completeGoogleLogin(): Promise<User> {
 private async acceptPasswordless(path: string, body: unknown): Promise<User> {
   try {
     const session = await firstValueFrom(
-      this.http.post<Session>(
-        `${this.api}${path}`,
-        body,
-        { withCredentials: true }
-      )
+      // No cookies: the API uses a bearer token, and a credentialed call from the phone app is blocked by CORS
+      this.http.post<Session>(`${this.api}${path}`, body)
     );
 
     this.pendingLink.set(null);
