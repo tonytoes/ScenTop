@@ -47,7 +47,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   }
 
   const neonAuthBaseUrl = env.NEON_AUTH_BASE_URL?.trim().replace(/\/+$/, '') || null;
-  const authAppOrigin = env.AUTH_APP_ORIGIN?.trim() || null;
+  // Forgiving about quotes and a trailing slash, which are easy to paste by accident into a hosting dashboard
+  const authAppOrigin = env.AUTH_APP_ORIGIN?.trim().replace(/^["']|["']$/g, '').replace(/\/+$/, '') || null;
   if (neonAuthBaseUrl) {
     const url = new URL(neonAuthBaseUrl);
     if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash) {

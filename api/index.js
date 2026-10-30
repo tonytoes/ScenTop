@@ -62579,7 +62579,7 @@ function loadConfig(env2 = process.env) {
     throw new Error("DATABASE_URL (your Neon connection string) must be set in production.");
   }
   const neonAuthBaseUrl = env2.NEON_AUTH_BASE_URL?.trim().replace(/\/+$/, "") || null;
-  const authAppOrigin = env2.AUTH_APP_ORIGIN?.trim() || null;
+  const authAppOrigin = env2.AUTH_APP_ORIGIN?.trim().replace(/^["']|["']$/g, "").replace(/\/+$/, "") || null;
   if (neonAuthBaseUrl) {
     const url2 = new URL(neonAuthBaseUrl);
     if (url2.protocol !== "https:" || url2.username || url2.password || url2.search || url2.hash) {
