@@ -12,6 +12,7 @@
     "build:demo": "ng build --configuration demo",
     "build:server": "node scripts/build-server.mjs",
     "build:admin": "ng build admin",
+    "build:api": "node scripts/build-api.mjs",
     "build:site": "ng build && ng build admin && node -e \"require('fs').cpSync('www-admin','www/admin',{recursive:true})\"",
     "build:all": "npm run build && npm run build:admin && npm run build:server",
     "start:prod": "node dist-server/index.js",
