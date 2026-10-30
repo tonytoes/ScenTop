@@ -13,3 +13,15 @@ export function safeAuthRedirect(value: string | null | undefined): string {
 export function needsProfile(user: User): boolean {
   return !user.firstName.trim() || !user.lastName.trim() || !user.phone.trim();
 }
+
+/** The admin app keeps its own saved login, so a shop admin's token is handed over before opening it. */
+export function openAdminApp(token: string | null): boolean {
+  if (!token || typeof window === 'undefined') return false;
+  try {
+    localStorage.setItem('scentop-admin-token', token);
+  } catch {
+    return false;
+  }
+  window.location.assign('/admin/');
+  return true;
+}

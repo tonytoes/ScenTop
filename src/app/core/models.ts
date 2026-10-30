@@ -16,6 +16,8 @@ export interface User {
   photoUrl: string | null;
   /** Optional for previously cached profiles; server always returns it. */
   hasPassword?: boolean;
+  /** 'admin' for shop admins; the server always returns it. */
+  role?: string;
 }
 
 export interface Variant {

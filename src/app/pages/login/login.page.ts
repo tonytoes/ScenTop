@@ -6,7 +6,9 @@ import { errorMessage } from '../../core/api-error';
 import { AuthService } from '../../core/auth.service';
 import { applyServerErrors } from '../../core/forms';
 import { PasswordlessActionsComponent } from '../../shared/passwordless-actions/passwordless-actions.component';
-import { safeAuthRedirect } from '../../core/auth-navigation';
+import { openAdminApp, safeAuthRedirect } from '../../core/auth-navigation';
+import { environment } from '../../../environments/environment';
+import { TokenStore } from '../../core/token-store';
 import { TextFieldComponent } from '../../shared/text-field/text-field.component';
 
 @Component({
@@ -20,6 +22,7 @@ export class LoginPage {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly tokens = inject(TokenStore);
 
   protected readonly submitting = signal(false);
   protected readonly formError = signal('');
@@ -47,7 +50,9 @@ export class LoginPage {
     this.submitting.set(true);
     try {
       const { email, password } = this.form.getRawValue();
-      await this.auth.login(email, password);
+      const user = await this.auth.login(email, password);
+      // Shop admins go straight to the admin studio (not in the offline demo, which has no admin)
+      if (user.role === 'admin' && !environment.demo && openAdminApp(this.tokens.token())) return;
       await this.router.navigateByUrl(this.redirect, { replaceUrl: true });
     } catch (error) {
       if (!applyServerErrors(this.form, error)) this.formError.set(errorMessage(error));
