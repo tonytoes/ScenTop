@@ -35,7 +35,8 @@ import { UiService } from '../../shared/ui.service';
             </header>
             <p>{{ m.message }}</p>
             <footer>
-              <a class="btn btn-sm btn-primary" [href]="'mailto:' + m.email + '?subject=' + replySubject"><app-icon name="mail" [size]="14" /> Reply</a>
+              <a class="btn btn-sm btn-primary" [href]="mailtoUrl(m)"><app-icon name="mail" [size]="14" /> Reply</a>
+              <a class="btn btn-sm" [href]="gmailUrl(m)" target="_blank" rel="noopener" title="Reply in Gmail (opens in a new tab)">Gmail</a>
               <button class="btn btn-sm btn-danger" type="button" (click)="remove(m)"><app-icon name="trash" [size]="14" /> Delete</button>
             </footer>
           </article>
@@ -80,7 +81,23 @@ export class MessagesPage {
   protected readonly loading = signal(true);
   protected readonly error = signal('');
   protected readonly initials = initials;
-  protected readonly replySubject = encodeURIComponent('Re: your message to ScenTop');
+  private readonly replySubject = 'Re: your message to ScenTop';
+
+  private replyBody(m: ContactMessage) {
+    const quoted = m.message.split('\n').map((line) => `> ${line}`).join('\n');
+    return `Hi ${m.name},\n\n\n\nOn ${new Date(m.createdAt).toLocaleString()} you wrote:\n${quoted}`;
+  }
+
+  /** `mailto:` link for the visitor's address, with the subject and a quoted copy of their message. */
+  protected mailtoUrl(m: ContactMessage) {
+    return `mailto:${encodeURIComponent(m.email).replace('%40', '@')}?subject=${encodeURIComponent(this.replySubject)}&body=${encodeURIComponent(this.replyBody(m))}`;
+  }
+
+  /** Web-mail fallback for machines with no mail app registered for `mailto:`. */
+  protected gmailUrl(m: ContactMessage) {
+    const q = new URLSearchParams({ view: 'cm', fs: '1', to: m.email, su: this.replySubject, body: this.replyBody(m) });
+    return `https://mail.google.com/mail/?${q}`;
+  }
 
   constructor() {
     void this.load();
