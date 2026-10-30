@@ -10728,24 +10728,24 @@ var require_vary = __commonJS({
     function parse4(header) {
       var end = 0;
       var list = [];
-      var start = 0;
+      var start2 = 0;
       for (var i = 0, len = header.length; i < len; i++) {
         switch (header.charCodeAt(i)) {
           case 32:
-            if (start === end) {
-              start = end = i + 1;
+            if (start2 === end) {
+              start2 = end = i + 1;
             }
             break;
           case 44:
-            list.push(header.substring(start, end));
-            start = end = i + 1;
+            list.push(header.substring(start2, end));
+            start2 = end = i + 1;
             break;
           default:
             end = i + 1;
             break;
         }
       }
-      list.push(header.substring(start, end));
+      list.push(header.substring(start2, end));
       return list;
     }
     function vary(res, field) {
@@ -17004,8 +17004,8 @@ var require_dist = __commonJS({
       }
       return index;
     }
-    function trailingOWS(header, start, end) {
-      while (end > start) {
+    function trailingOWS(header, start2, end) {
+      while (end > start2) {
         const char = header.charCodeAt(end - 1);
         if (char !== SP && char !== HTAB)
           break;
@@ -17448,8 +17448,8 @@ var require_dist2 = __commonJS({
       }
       return index;
     }
-    function trailingOWS(header, start, end) {
-      while (end > start) {
+    function trailingOWS(header, start2, end) {
+      while (end > start2) {
         const char = header.charCodeAt(end - 1);
         if (char !== SP && char !== HTAB)
           break;
@@ -21024,8 +21024,8 @@ var require_dist3 = __commonJS({
       }
       return index;
     }
-    function trailingOWS(header, start, end) {
-      while (end > start) {
+    function trailingOWS(header, start2, end) {
+      while (end > start2) {
         const char = header.charCodeAt(end - 1);
         if (char !== SP && char !== HTAB)
           break;
@@ -21105,27 +21105,27 @@ var require_forwarded = __commonJS({
     function parse4(header) {
       var end = header.length;
       var list = [];
-      var start = header.length;
+      var start2 = header.length;
       for (var i = header.length - 1; i >= 0; i--) {
         switch (header.charCodeAt(i)) {
           case 32:
-            if (start === end) {
-              start = end = i;
+            if (start2 === end) {
+              start2 = end = i;
             }
             break;
           case 44:
-            if (start !== end) {
-              list.push(header.substring(start, end));
+            if (start2 !== end) {
+              list.push(header.substring(start2, end));
             }
-            start = end = i;
+            start2 = end = i;
             break;
           default:
-            start = i;
+            start2 = i;
             break;
         }
       }
-      if (start !== end) {
-        list.push(header.substring(start, end));
+      if (start2 !== end) {
+        list.push(header.substring(start2, end));
       }
       return list;
     }
@@ -23559,8 +23559,8 @@ var require_dist5 = __commonJS({
       }
       return index;
     }
-    function trailingOWS(header, start, end) {
-      while (end > start) {
+    function trailingOWS(header, start2, end) {
+      while (end > start2) {
         const char = header.charCodeAt(end - 1);
         if (char !== SP && char !== HTAB)
           break;
@@ -23588,9 +23588,9 @@ var require_accept = __commonJS({
       var values = [];
       var index = 0;
       while (index < header.length) {
-        var start = skipOptionalWhitespace(header, index);
-        var parsed = contentType.parse(header, { comma: true, start });
-        parsed.type = header.slice(start, start + parsed.type.length);
+        var start2 = skipOptionalWhitespace(header, index);
+        var parsed = contentType.parse(header, { comma: true, start: start2 });
+        parsed.type = header.slice(start2, start2 + parsed.type.length);
         values.push(parsed);
         index = parsed.index + 1;
       }
@@ -24145,24 +24145,24 @@ var require_fresh = __commonJS({
     function parseTokenList(str) {
       var end = 0;
       var list = [];
-      var start = 0;
+      var start2 = 0;
       for (var i = 0, len = str.length; i < len; i++) {
         switch (str.charCodeAt(i)) {
           case 32:
-            if (start === end) {
-              start = end = i + 1;
+            if (start2 === end) {
+              start2 = end = i + 1;
             }
             break;
           case 44:
-            list.push(str.substring(start, end));
-            start = end = i + 1;
+            list.push(str.substring(start2, end));
+            start2 = end = i + 1;
             break;
           default:
             end = i + 1;
             break;
         }
       }
-      list.push(str.substring(start, end));
+      list.push(str.substring(start2, end));
       return list;
     }
   }
@@ -24191,10 +24191,10 @@ var require_range_parser = __commonJS({
         }
         var startStr = arr[i].slice(0, indexOf).trim();
         var endStr = arr[i].slice(indexOf + 1).trim();
-        var start = parsePos(startStr);
+        var start2 = parsePos(startStr);
         var end = parsePos(endStr);
         if (startStr.length === 0) {
-          start = size - end;
+          start2 = size - end;
           end = size - 1;
         } else if (endStr.length === 0) {
           end = size - 1;
@@ -24202,14 +24202,14 @@ var require_range_parser = __commonJS({
         if (end > size - 1) {
           end = size - 1;
         }
-        if (isNaN(start) || isNaN(end)) {
+        if (isNaN(start2) || isNaN(end)) {
           return -2;
         }
-        if (start > end || start < 0) {
+        if (start2 > end || start2 < 0) {
           continue;
         }
         ranges.push({
-          start,
+          start: start2,
           end
         });
       }
@@ -24608,8 +24608,8 @@ var require_dist6 = __commonJS({
       }
       return index;
     }
-    function trailingOWS(str, start, end) {
-      while (end > start) {
+    function trailingOWS(str, start2, end) {
+      while (end > start2) {
         const char = str.charCodeAt(end - 1);
         if (char !== SP && char !== HTAB)
           break;
@@ -25331,27 +25331,27 @@ var require_send = __commonJS({
     function parseTokenList(str) {
       var end = 0;
       var list = [];
-      var start = 0;
+      var start2 = 0;
       for (var i = 0, len = str.length; i < len; i++) {
         switch (str.charCodeAt(i)) {
           case 32:
-            if (start === end) {
-              start = end = i + 1;
+            if (start2 === end) {
+              start2 = end = i + 1;
             }
             break;
           case 44:
-            if (start !== end) {
-              list.push(str.substring(start, end));
+            if (start2 !== end) {
+              list.push(str.substring(start2, end));
             }
-            start = end = i + 1;
+            start2 = end = i + 1;
             break;
           default:
             end = i + 1;
             break;
         }
       }
-      if (start !== end) {
-        list.push(str.substring(start, end));
+      if (start2 !== end) {
+        list.push(str.substring(start2, end));
       }
       return list;
     }
@@ -26557,8 +26557,8 @@ var require_ipv4 = __commonJS({
        * Returns the bits in the given range as a base-2 string
        * @returns {string}
        */
-      getBitsBase2(start, end) {
-        return this.binaryZeroPad().slice(start, end);
+      getBitsBase2(start2, end) {
+        return this.binaryZeroPad().slice(start2, end);
       }
       /**
        * Return the reversed in-addr.arpa form of the address, e.g.
@@ -27435,26 +27435,26 @@ var require_ipv6 = __commonJS({
        * Return the bits in the given range as a BigInt
        * @returns {bigint}
        */
-      getBits(start, end) {
-        return BigInt(`0b${this.getBitsBase2(start, end)}`);
+      getBits(start2, end) {
+        return BigInt(`0b${this.getBitsBase2(start2, end)}`);
       }
       /**
        * Return the bits in the given range as a base-2 string
        * @returns {String}
        */
-      getBitsBase2(start, end) {
-        return this.binaryZeroPad().slice(start, end);
+      getBitsBase2(start2, end) {
+        return this.binaryZeroPad().slice(start2, end);
       }
       /**
        * Return the bits in the given range as a base-16 string
        * @returns {String}
        */
-      getBitsBase16(start, end) {
-        const length = end - start;
+      getBitsBase16(start2, end) {
+        const length = end - start2;
         if (length % 4 !== 0) {
           throw new Error("Length of bits to retrieve must be divisible by four");
         }
-        return this.getBits(start, end).toString(16).padStart(length / 4, "0");
+        return this.getBits(start2, end).toString(16).padStart(length / 4, "0");
       }
       /**
        * Return the bits that are set past the subnet mask length
@@ -28471,12 +28471,12 @@ var require_ecdsa_sig_formatter = __commonJS({
       dst = base64Url(dst);
       return dst;
     }
-    function countPadding(buf, start, stop) {
+    function countPadding(buf, start2, stop) {
       var padding = 0;
-      while (start + padding < stop && buf[start + padding] === 0) {
+      while (start2 + padding < stop && buf[start2 + padding] === 0) {
         ++padding;
       }
-      var needsSign = buf[start + padding] >= MAX_OCTET;
+      var needsSign = buf[start2 + padding] >= MAX_OCTET;
       if (needsSign) {
         --padding;
       }
@@ -34787,12 +34787,12 @@ var require_buffer_reader = __commonJS({
         return result;
       }
       cstring() {
-        const start = this.offset;
-        let end = start;
+        const start2 = this.offset;
+        let end = start2;
         while (this.buffer[end++]) {
         }
         this.offset = end;
-        return this.buffer.toString(this.encoding, start, end - 1);
+        return this.buffer.toString(this.encoding, start2, end - 1);
       }
       bytes(length) {
         const result = this.buffer.slice(this.offset, this.offset + length);
@@ -39720,9 +39720,9 @@ function nullish(input2) {
   return input2 === null || input2 === void 0;
 }
 function cleanRegex(source) {
-  const start = source.startsWith("^") ? 1 : 0;
+  const start2 = source.startsWith("^") ? 1 : 0;
   const end = source.endsWith("$") ? source.length - 1 : source.length;
-  return source.slice(start, end);
+  return source.slice(start2, end);
 }
 function floatSafeRemainder(val, step) {
   const ratio = val / step;
@@ -40181,9 +40181,9 @@ function prefixIssues(path3, issues) {
 function unwrapMessage(message2) {
   return typeof message2 === "string" ? message2 : message2?.message;
 }
-function attachSchema(issues, start, inst) {
+function attachSchema(issues, start2, inst) {
   var _a3;
-  for (let i = start; i < issues.length; i++) {
+  for (let i = start2; i < issues.length; i++) {
     (_a3 = issues[i]).schema ?? (_a3.schema = inst);
   }
 }
@@ -60337,12 +60337,12 @@ function _crypt(b, salt, rounds, callback, progressCallback) {
   function next() {
     if (progressCallback) progressCallback(i / rounds);
     if (i < rounds) {
-      var start = Date.now();
+      var start2 = Date.now();
       for (; i < rounds; ) {
         i = i + 1;
         _key(b, P, S);
         _key(salt, P, S);
-        if (Date.now() - start > MAX_EXECUTION_TIME) break;
+        if (Date.now() - start2 > MAX_EXECUTION_TIME) break;
       }
     } else {
       for (i = 0; i < 64; i++)
@@ -60638,9 +60638,9 @@ async function dashboard(db, days) {
        (${DAY2("now()")} - (2 * $1::int - 1))::text AS prev_start`,
     [days]
   );
-  const { today, start, prev_start: prevStart } = range;
-  const bounds = [prevStart, start, today];
-  const period = [start, today];
+  const { today, start: start2, prev_start: prevStart } = range;
+  const bounds = [prevStart, start2, today];
+  const period = [start2, today];
   const inPeriod = `${DAY2("o.created_at")} BETWEEN $1::date AND $2::date`;
   const [series, totals, statuses, categoryRows, sizeRows, audienceRows, heat, top, customerMix, topCustomers, month, carts, wished, recent, lifetime] = await Promise.all([
     // Revenue and orders per day for both periods
@@ -60765,7 +60765,7 @@ async function dashboard(db, days) {
   const stats = lifetime[0];
   const m = month[0];
   return {
-    range: { days, from: start, to: today },
+    range: { days, from: start2, to: today },
     kpis: {
       revenue: metric((row) => row.revenue),
       orders: metric((row) => row.orders),
@@ -62718,11 +62718,24 @@ async function createDb(config2) {
 
 // server/vercel.ts
 var app;
-async function handler(request, response) {
-  app ??= (async () => {
-    const config2 = { ...loadConfig(), autoMigrate: false };
+async function start() {
+  let config2;
+  try {
+    config2 = { ...loadConfig(), autoMigrate: false };
+  } catch (error62) {
+    throw new StartError(`Server setup problem: ${error62 instanceof Error ? error62.message : error62}`);
+  }
+  try {
     return createApp({ db: await createDb(config2), config: config2 });
-  })();
+  } catch (error62) {
+    console.error("[api] Database error:", error62);
+    throw new StartError("The database could not be reached. Check DATABASE_URL in the Vercel settings.");
+  }
+}
+var StartError = class extends Error {
+};
+async function handler(request, response) {
+  app ??= start();
   try {
     (await app)(request, response);
   } catch (error62) {
@@ -62730,7 +62743,7 @@ async function handler(request, response) {
     console.error("[api] Could not start:", error62 instanceof Error ? error62.message : error62);
     response.statusCode = 500;
     response.setHeader("Content-Type", "application/json");
-    response.end(JSON.stringify({ error: { message: "The server could not start." } }));
+    response.end(JSON.stringify({ error: { message: error62 instanceof StartError ? error62.message : "The server could not start." } }));
   }
 }
 module.exports = module.exports.default;
