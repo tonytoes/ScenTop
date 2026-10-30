@@ -188,6 +188,7 @@ $Jobs = @{
   'apk-install'= @{ Args = 'run android:install';    Busy = 'Installing the APK on the phone' }
   demo         = @{ Args = 'run db:demo';            Busy = 'Creating demo customers and orders'; Database = $true }
   'demo-clear' = @{ Args = 'run db:demo-clear';      Busy = 'Removing demo customers and orders'; Database = $true }
+  'admin-create' = @{ Args = 'run admin:create';     Busy = 'Creating the admin account'; Database = $true }
 }
 
 function Start-Task([string]$kind, [string]$label, $then) {
@@ -216,11 +217,65 @@ function Start-LauncherJob([string]$kind) {
   Start-Task $kind $job.Busy $restart
 }
 
+# Asks for the new admin's details. The password goes to the job through environment variables, never on a command line.
+function Show-AdminDialog {
+  $dialog = New-Object System.Windows.Forms.Form
+  $dialog.Text = 'Create admin account'
+  $dialog.Size = New-Object System.Drawing.Size(420, 330)
+  $dialog.StartPosition = 'CenterParent'
+  $dialog.FormBorderStyle = 'FixedDialog'
+  $dialog.MaximizeBox = $false
+  $dialog.MinimizeBox = $false
+  $dialog.BackColor = $C.Bg
+  $dialog.ForeColor = $C.Ink
+  $dialog.Font = $FontBody
+  $fields = @{}
+  $y = 16
+  foreach ($item in @(@('name', 'Name (optional)', 'Shop Admin'), @('email', 'E-mail (used to log in)', ''), @('password', 'Password (8+ characters)', ''))) {
+    $label = New-Object System.Windows.Forms.Label
+    $label.Text = $item[1]
+    $label.AutoSize = $true
+    $label.Location = New-Object System.Drawing.Point(20, $y)
+    $box = New-Object System.Windows.Forms.TextBox
+    $box.Text = $item[2]
+    $box.Location = New-Object System.Drawing.Point(20, ($y + 22))
+    $box.Width = 360
+    if ($item[0] -eq 'password') { $box.UseSystemPasswordChar = $true }
+    $dialog.Controls.AddRange(@($label, $box))
+    $fields[$item[0]] = $box
+    $y += 62
+  }
+  $note = New-Object System.Windows.Forms.Label
+  $note.Text = 'If the e-mail already has an account, it becomes an admin and gets this password.'
+  $note.ForeColor = $C.Muted
+  $note.Location = New-Object System.Drawing.Point(20, $y)
+  $note.Size = New-Object System.Drawing.Size(360, 34)
+  $ok = New-Button 'Create admin' 130 $C.Gold (Rgb '#1f1a24')
+  $ok.Location = New-Object System.Drawing.Point(150, ($y + 38))
+  $cancel = New-Button 'Cancel' 100 $C.Panel2 $C.Ink
+  $cancel.Location = New-Object System.Drawing.Point(290, ($y + 38))
+  $ok.Add_Click({
+    if ($fields.email.Text -notmatch '^[^@\s]+@[^@\s]+\.[^@\s]+$') { [System.Windows.Forms.MessageBox]::Show('Enter a valid e-mail address.', 'ScenTop') | Out-Null; return }
+    if ($fields.password.Text.Length -lt 8) { [System.Windows.Forms.MessageBox]::Show('The password needs at least 8 characters.', 'ScenTop') | Out-Null; return }
+    $dialog.DialogResult = 'OK'
+  })
+  $cancel.Add_Click({ $dialog.DialogResult = 'Cancel' })
+  $dialog.Controls.AddRange(@($note, $ok, $cancel))
+  $dialog.AcceptButton = $ok
+  $dialog.CancelButton = $cancel
+  $result = $null
+  if ($dialog.ShowDialog($Form) -eq 'OK') {
+    $result = @{ Name = $fields.name.Text.Trim(); Email = $fields.email.Text.Trim(); Password = $fields.password.Text }
+  }
+  $dialog.Dispose()
+  return $result
+}
+
 # ---- Window --------------------------------------------------------------------------------------
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = 'ScenTop Launcher'
-$Form.Size = New-Object System.Drawing.Size(1020, 820)
-$Form.MinimumSize = New-Object System.Drawing.Size(900, 760)
+$Form.Size = New-Object System.Drawing.Size(1020, 880)
+$Form.MinimumSize = New-Object System.Drawing.Size(900, 820)
 $Form.StartPosition = 'CenterScreen'
 $Form.BackColor = $C.Bg
 $Form.ForeColor = $C.Ink
@@ -449,6 +504,17 @@ $SetupGrid = New-ActionGrid @(
   @{ Id = 'demo-clear'; Label = 'Remove demo sales data'; Command = 'npm run db:demo-clear'
      About = 'Deletes only the fake customers and orders added by "Load demo sales data".'
      Run = { Start-LauncherJob 'demo-clear' } }
+  @{ Id = 'admin-create'; Label = 'Create admin account'; Command = 'npm run admin:create'
+     About = 'Makes a login for the admin studio. Use an existing e-mail to turn that account into an admin.'
+     Run = {
+       $details = Show-AdminDialog
+       if (-not $details) { return }
+       $env:SCENTOP_ADMIN_NAME = $details.Name
+       $env:SCENTOP_ADMIN_EMAIL = $details.Email
+       $env:SCENTOP_ADMIN_PASSWORD = $details.Password
+       Start-LauncherJob 'admin-create'
+       Remove-Item Env:SCENTOP_ADMIN_NAME, Env:SCENTOP_ADMIN_EMAIL, Env:SCENTOP_ADMIN_PASSWORD -ErrorAction SilentlyContinue
+     } }
   @{ Id = 'install'; Label = 'Install packages'; Command = 'npm install'
      About = 'Run once after downloading the project, or when an error says a package is missing.'
      Run = { if (Get-Command npm -ErrorAction SilentlyContinue) { Start-LauncherJob 'install' } else { Assert-Ready | Out-Null } } }

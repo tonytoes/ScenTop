@@ -27,6 +27,7 @@
     "db:demo": "tsx server/cli.ts demo",
     "db:demo-clear": "tsx server/cli.ts demo-clear",
     "admin:make": "tsx server/cli.ts make-admin",
+    "admin:create": "tsx server/cli.ts create-admin",
     "assets:android": "capacitor-assets generate --android",
     "cap:sync": "npm run build:mobile && cap sync android",
     "android": "npm run cap:sync && cap open android",

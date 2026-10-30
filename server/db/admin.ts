@@ -19,6 +19,20 @@ export async function ensureAdmin(db: Db, config: Config): Promise<string | null
   return email;
 }
 
+/** Creates an admin account, or resets the password and gives admin rights when the e-mail already has an account. */
+export async function createAdmin(db: Db, config: Config, email: string, password: string, name = 'Shop Admin'): Promise<'created' | 'updated'> {
+  const [first = 'Shop', ...rest] = name.trim().split(/\s+/);
+  const passwordHash = await hashPassword(password, config.bcryptRounds);
+  const existing = await db.query('SELECT 1 FROM users WHERE lower(email) = lower($1)', [email]);
+  await db.query(
+    `INSERT INTO users (email, password_hash, first_name, last_name, role)
+     VALUES ($1, $2, $3, $4, 'admin')
+     ON CONFLICT (lower(email)) DO UPDATE SET password_hash = $2, role = 'admin', is_disabled = false`,
+    [email, passwordHash, first, rest.join(' ') || 'Admin'],
+  );
+  return existing.length ? 'updated' : 'created';
+}
+
 /** Gives an existing account admin rights. Returns false when no account has that e-mail. */
 export async function makeAdmin(db: Db, email: string): Promise<boolean> {
   const rows = await db.query("UPDATE users SET role = 'admin', is_disabled = false WHERE lower(email) = lower($1) RETURNING id", [email]);
